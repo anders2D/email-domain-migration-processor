@@ -1,0 +1,44 @@
+%%{init: {'theme':'base'}}%%
+graph LR
+    subgraph CTX["⚡ CONTEXTO"]
+        direction TB
+        C1[📥 Recepción de archivos<br/>Email/SharePoint]
+        C2[📤 Entrega de resultados<br/>CSV por email]
+    end
+    
+    subgraph IN["✅ ALCANCE CORE"]
+        direction TB
+        I1[👁️ Revisión manual<br/>Verificación formato]
+        I2[✂️ Extracción de campos<br/>Separación en Excel]
+        I3[📝 Normalización formato<br/>Capitalización manual]
+        I4[🔗 Generación nuevos correos<br/>Concatenación]
+        I5[✔️ Validación manual<br/>Revisión visual]
+    end
+    
+    subgraph OUT["❌ EXCLUIDO"]
+        direction TB
+        O1[🚫 Migración real<br/>en servidores]
+        O2[🚫 Validación SMTP<br/>en vivo]
+        O3[🚫 Notificaciones<br/>automáticas]
+        O4[🚫 Gestión usuarios<br/>Active Directory]
+        O5[🚫 Aprobaciones<br/>de cambios]
+        O6[🚫 Backup y<br/>recuperación]
+    end
+    
+    style CTX fill:#fff9c4,stroke:#fbc02d,stroke-width:3px
+    style IN fill:#e8f5e9,stroke:#4caf50,stroke-width:3px
+    style OUT fill:#ffebee,stroke:#f44336,stroke-width:3px
+    style C1 fill:#fff59d,stroke:#fbc02d,stroke-width:2px,stroke-dasharray: 5 5
+    style C2 fill:#fff59d,stroke:#fbc02d,stroke-width:2px,stroke-dasharray: 5 5
+    style I1 fill:#c8e6c9
+    style I2 fill:#c8e6c9
+    style I3 fill:#c8e6c9
+    style I4 fill:#c8e6c9
+    style I5 fill:#c8e6c9
+    style O1 fill:#ffcdd2
+    style O2 fill:#ffcdd2
+    style O3 fill:#ffcdd2
+    style O4 fill:#ffcdd2
+    style O5 fill:#ffcdd2
+    style O6 fill:#ffcdd2
+

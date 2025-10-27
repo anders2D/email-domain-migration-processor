@@ -1,0 +1,42 @@
+graph TB
+    subgraph USUARIOS["👥 USUARIOS"]
+        U1[Analista]
+        U2[Sistema Solicitante]
+        U3[Sistema Destino]
+    end
+
+    subgraph SYSTEM["📦 EMAIL PROCESSOR SYSTEM"]
+        subgraph INTERFACES["Interfaces"]
+            CLI[🖥️ CLI]
+            API[🌐 API REST]
+            LIB[📚 Library]
+        end
+
+        subgraph CORE["⚙️ CORE DOMAIN"]
+            LOGIC[Email Processing Logic<br/>+ Business Rules<br/>BR-001 to BR-005<br/>TR-001 to TR-005]
+        end
+
+        subgraph ADAPTERS["🔌 Adapters"]
+            FILE[📄 File Reader]
+            CSV[📊 CSV Writer]
+            VAL[✅ Validation & Logging]
+        end
+    end
+
+    U1 --> CLI
+    U2 --> API
+    U3 --> LIB
+
+    CLI --> LOGIC
+    API --> LOGIC
+    LIB --> LOGIC
+
+    LOGIC --> FILE
+    LOGIC --> CSV
+    LOGIC --> VAL
+
+    style USUARIOS fill:#e1f5ff
+    style SYSTEM fill:#fff4e6
+    style INTERFACES fill:#f3e5f5
+    style CORE fill:#e8f5e9
+    style ADAPTERS fill:#fce4ec

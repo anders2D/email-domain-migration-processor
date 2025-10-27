@@ -1,0 +1,47 @@
+%%{init: {'theme':'base'}}%%
+flowchart TD
+    START(("🟢 INICIO"))
+    
+    A1["Recibir archivo<br/>API/Webhook | <1 seg"]
+    A2["Validar formato<br/>Reglas automáticas | <1 seg"]
+    A3{{"¿Válido?"}}
+    A4["Notificar error<br/>Email automático | <1 seg"]
+    
+    B1["Extraer campos<br/>Parser | <1 seg"]
+    B2["Normalizar datos<br/>Funciones texto | <1 seg"]
+    B3["Generar correos<br/>Concatenación | <1 seg"]
+    B4["Validar resultados<br/>Reglas negocio | <1 seg"]
+    
+    C1["Guardar CSV<br/>Generación auto | <1 seg"]
+    C2["Enviar resultado<br/>API/Email | <1 seg"]
+    C3["Registrar logs<br/>Auditoría auto | <1 seg"]
+    
+    END(("🔴 FIN"))
+    
+    START --> A1
+    A1 --> A2
+    A2 --> A3
+    A3 -->|No| A4
+    A4 --> END
+    A3 -->|Sí| B1
+    B1 --> B2
+    B2 --> B3
+    B3 --> B4
+    B4 --> C1
+    C1 --> C2
+    C2 --> C3
+    C3 --> END
+    
+    style START fill:#c8e6c9,stroke:#2e7d32,stroke-width:4px
+    style END fill:#c8e6c9,stroke:#2e7d32,stroke-width:4px
+    style A1 fill:#81c784,stroke:#388e3c,stroke-width:3px
+    style A2 fill:#81c784,stroke:#388e3c,stroke-width:3px
+    style A4 fill:#ffab91,stroke:#e64a19,stroke-width:2px
+    style B1 fill:#81c784,stroke:#388e3c,stroke-width:3px
+    style B2 fill:#81c784,stroke:#388e3c,stroke-width:3px
+    style B3 fill:#81c784,stroke:#388e3c,stroke-width:3px
+    style B4 fill:#81c784,stroke:#388e3c,stroke-width:3px
+    style C1 fill:#81c784,stroke:#388e3c,stroke-width:3px
+    style C2 fill:#81c784,stroke:#388e3c,stroke-width:3px
+    style C3 fill:#81c784,stroke:#388e3c,stroke-width:3px
+    style A3 fill:#fff9c4,stroke:#f57f17,stroke-width:3px

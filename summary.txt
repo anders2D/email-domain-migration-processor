@@ -1,0 +1,23 @@
+============================================================
+           REPORTE DE PROCESAMIENTO DE CORREOS
+============================================================
+
+Fecha y hora: 2025-10-27 17:48:59
+
+ESTADISTICAS:
+  Total procesados:     1
+  Exitosos:             1 (100.0%)
+  Rechazados:           0
+  Duplicados:           0
+  Advertencias:         0
+
+TIEMPO DE EJECUCION:
+  Duracion:             0.00s
+
+ARCHIVOS GENERADOS:
+  CSV de salida:        None
+  Log de errores:       error_log.txt
+  Reporte resumen:      summary.txt
+
+DOMINIO:
+  Dominio destino:      newdomain.com

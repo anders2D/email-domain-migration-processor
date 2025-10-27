@@ -1,0 +1,62 @@
+%%{init: {'theme':'base'}}%%
+flowchart TD
+    START((🟢 INICIO))
+    
+    A1["Enviar archivo TXT<br/>Solicitante | 1-2 min"]
+    
+    B1["Descargar archivo<br/>Analista | 1 min"]
+    B2["Revisar formato<br/>Analista | Notepad | 2-3 min"]
+    B3{"¿Formato<br/>válido?"}
+    B4["Corregir errores<br/>Analista | 5-10 min"]
+    
+    C1["Copiar a Excel<br/>Analista | Excel | 1 min"]
+    C2["Separar campos<br/>Analista | Excel | 2-3 min"]
+    C3["Capitalizar nombres<br/>Analista | Excel | 5-10 min"]
+    C4["Concatenar correo<br/>Analista | Excel | 3-5 min"]
+    
+    D1["Validar resultados<br/>Analista | 5-10 min"]
+    D2{"¿Errores<br/>detectados?"}
+    D3["Corregir datos<br/>Analista | Variable"]
+    
+    D4["Guardar CSV<br/>Analista | 1 min"]
+    E1["Enviar resultado<br/>Analista | Email | 2-3 min"]
+    E2["Validar entrega<br/>Solicitante | 1 min"]
+    
+    END((🔴 FIN))
+    
+    START --> A1
+    A1 --> B1
+    B1 --> B2
+    B2 --> B3
+    B3 -->|No| B4
+    B4 --> B2
+    B3 -->|Sí| C1
+    C1 --> C2
+    C2 --> C3
+    C3 --> C4
+    C4 --> D1
+    D1 --> D2
+    D2 -->|Sí| D3
+    D3 --> D1
+    D2 -->|No| D4
+    D4 --> E1
+    E1 --> E2
+    E2 --> END
+    
+    style START fill:#c8e6c9,stroke:#2e7d32,stroke-width:4px
+    style END fill:#ffcdd2,stroke:#c62828,stroke-width:4px
+    style A1 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style E2 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style B1 fill:#fff3e0,stroke:#ff6f00,stroke-width:2px
+    style B2 fill:#fff3e0,stroke:#ff6f00,stroke-width:2px
+    style B4 fill:#fff3e0,stroke:#ff6f00,stroke-width:2px
+    style C1 fill:#fff3e0,stroke:#ff6f00,stroke-width:2px
+    style C2 fill:#fff3e0,stroke:#ff6f00,stroke-width:2px
+    style C3 fill:#fff3e0,stroke:#ff6f00,stroke-width:2px
+    style C4 fill:#fff3e0,stroke:#ff6f00,stroke-width:2px
+    style D1 fill:#fff3e0,stroke:#ff6f00,stroke-width:2px
+    style D3 fill:#fff3e0,stroke:#ff6f00,stroke-width:2px
+    style D4 fill:#fff3e0,stroke:#ff6f00,stroke-width:2px
+    style E1 fill:#fff3e0,stroke:#ff6f00,stroke-width:2px
+    style B3 fill:#fff9c4,stroke:#f57f17,stroke-width:3px
+    style D2 fill:#fff9c4,stroke:#f57f17,stroke-width:3px

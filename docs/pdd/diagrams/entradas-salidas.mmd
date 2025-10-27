@@ -1,0 +1,45 @@
+%%{init: {'theme':'base'}}%%
+flowchart LR
+    subgraph ENTRADAS["📥 ENTRADAS"]
+        direction TB
+        E1["📄 Archivo TXT<br/>sample_emails.txt<br/>nombre.apellido@domain.com"]
+        E2["📋 Instrucciones<br/>(Opcional)<br/>Dominio destino"]
+        E3["📧 Canal<br/>(Opcional)<br/>Email/SharePoint"]
+    end
+    
+    subgraph PROCESO["⚙️ PROCESO MANUAL"]
+        direction TB
+        P1["👤 Analista de Datos"]
+        P2["💻 Herramientas<br/>Excel, Notepad"]
+        P3["🔄 Transformación<br/>Validar, Normalizar, Concatenar"]
+    end
+    
+    subgraph SALIDAS["📤 SALIDAS"]
+        direction TB
+        S1["📊 Archivo CSV<br/>expected_output.csv<br/>Nombre, Apellido, Correos"]
+        S2["📸 Evidencia<br/>(Opcional)<br/>Capturas/Registros"]
+        S3["📧 Canal<br/>(Opcional)<br/>Email/SharePoint"]
+    end
+    
+    E1 --> P1
+    E2 -.-> P1
+    E3 -.-> P1
+    P1 --> P2
+    P2 --> P3
+    P3 --> S1
+    P3 -.-> S2
+    S1 -.-> S3
+    S2 -.-> S3
+    
+    style ENTRADAS fill:#e3f2fd,stroke:#1976d2,stroke-width:3px
+    style PROCESO fill:#fff4e6,stroke:#ff9800,stroke-width:3px
+    style SALIDAS fill:#e8f5e9,stroke:#4caf50,stroke-width:3px
+    style E1 fill:#bbdefb,stroke:#1976d2,stroke-width:3px
+    style E2 fill:#e0e0e0,stroke:#9e9e9e,stroke-dasharray: 5 5
+    style E3 fill:#e0e0e0,stroke:#9e9e9e,stroke-dasharray: 5 5
+    style P1 fill:#ffe0b2
+    style P2 fill:#ffe0b2
+    style P3 fill:#ffe0b2
+    style S1 fill:#c8e6c9,stroke:#4caf50,stroke-width:3px
+    style S2 fill:#e0e0e0,stroke:#9e9e9e,stroke-dasharray: 5 5
+    style S3 fill:#e0e0e0,stroke:#9e9e9e,stroke-dasharray: 5 5

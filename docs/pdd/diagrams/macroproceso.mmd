@@ -1,0 +1,51 @@
+%%{init: {'theme':'base'}}%%
+graph TB
+    subgraph "CONTEXTO ORGANIZACIONAL"
+        subgraph "UPSTREAM"
+            A1[Extracción HR<br/>Listado Empleados]
+            A2[Aprobación Cambio<br/>Dominio]
+        end
+        
+        subgraph "PROCESO MANUAL"
+            direction TB
+            B1[Recepción Archivo<br/>Email/SharePoint]
+            B2[Revisión Manual<br/>Notepad/VS Code]
+            B3[Extracción Campos<br/>Excel]
+            B4[Normalización<br/>Fórmulas Manuales]
+            B5[Concatenación<br/>Nuevo Correo]
+            B6[Validación Visual<br/>Correcciones]
+            B7[Entrega CSV<br/>Email/SharePoint]
+            
+            B1 --> B2
+            B2 --> B3
+            B3 --> B4
+            B4 --> B5
+            B5 --> B6
+            B6 --> B7
+        end
+        
+        subgraph "DOWNSTREAM"
+            C1[Importación<br/>Servidor Correo]
+            C2[Notificación<br/>Usuarios]
+            C3[Actualización<br/>Active Directory]
+        end
+    end
+    
+    A1 -.-> B1
+    A2 -.-> B1
+    B7 -.-> C1
+    B7 -.-> C2
+    B7 -.-> C3
+    
+    style B1 fill:#fff4e6,stroke:#ff9800,stroke-width:3px
+    style B2 fill:#fff4e6,stroke:#ff9800,stroke-width:3px
+    style B3 fill:#fff4e6,stroke:#ff9800,stroke-width:3px
+    style B4 fill:#fff4e6,stroke:#ff9800,stroke-width:3px
+    style B5 fill:#fff4e6,stroke:#ff9800,stroke-width:3px
+    style B6 fill:#fff4e6,stroke:#ff9800,stroke-width:3px
+    style B7 fill:#fff4e6,stroke:#ff9800,stroke-width:3px
+    style A1 fill:#e0e0e0,stroke-dasharray: 5 5
+    style A2 fill:#e0e0e0,stroke-dasharray: 5 5
+    style C1 fill:#e0e0e0,stroke-dasharray: 5 5
+    style C2 fill:#e0e0e0,stroke-dasharray: 5 5
+    style C3 fill:#e0e0e0,stroke-dasharray: 5 5

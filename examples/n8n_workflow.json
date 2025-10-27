@@ -1,0 +1,189 @@
+{
+  "name": "Email Processor - Complete Flow",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [-320, 352],
+      "id": "8674a577-bff1-4b28-9513-b07071247f80"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "emails",
+              "value": "[\"alberto.zapata@example.com\",\"ana.velasquez@example.com\",\"invalid\",\"carlos.diaz@example.com\"]"
+            },
+            {
+              "name": "new_domain",
+              "value": "company.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Input Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [-128, 352],
+      "id": "90562c76-8016-4c94-8aae-9ed5de9f7845"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://5p5adxq0me.execute-api.us-east-1.amazonaws.com/extract",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "prod-email-processor-2024-secure-key"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({input: JSON.parse($json.emails), input_type: 'list'}) }}",
+        "options": {}
+      },
+      "name": "1. Extract",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [80, 352],
+      "id": "22899850-db46-4039-b17b-f71ed8b7868c"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://5p5adxq0me.execute-api.us-east-1.amazonaws.com/transform",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "prod-email-processor-2024-secure-key"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({emails: $json.emails, new_domain: 'company.com'}) }}",
+        "options": {}
+      },
+      "name": "2. Transform",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [288, 352],
+      "id": "1e698ffe-3b67-4931-b2c5-abcd61cda31b"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://5p5adxq0me.execute-api.us-east-1.amazonaws.com/generate",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "prod-email-processor-2024-secure-key"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({transformed: $json.transformed, output_type: 'csv'}) }}",
+        "options": {}
+      },
+      "name": "3. Generate CSV",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [480, 352],
+      "id": "c3667717-002b-4ec7-840f-9578ab711562"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\nconst csvContent = item.output || '';\nconst fileName = 'emails_transformed_' + new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5) + '.csv';\n\nif (!csvContent) {\n  console.warn('No CSV content found in output, creating an empty CSV file.');\n}\n\nreturn [{\n  json: {\n    fileName: fileName,\n    csvContent: csvContent,\n    count: item.count || 0,\n    format: item.format || 'csv'\n  },\n  binary: {\n    data: {\n      data: Buffer.from(csvContent, 'utf-8').toString('base64'),\n      mimeType: 'text/csv',\n      fileName: fileName\n    }\n  }\n}];"
+      },
+      "name": "4. Prepare CSV Download",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [688, 352],
+      "id": "6153d138-0e2f-4f80-8f5c-727110efd1ce"
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Input Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input Data": {
+      "main": [
+        [
+          {
+            "node": "1. Extract",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1. Extract": {
+      "main": [
+        [
+          {
+            "node": "2. Transform",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2. Transform": {
+      "main": [
+        [
+          {
+            "node": "3. Generate CSV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3. Generate CSV": {
+      "main": [
+        [
+          {
+            "node": "4. Prepare CSV Download",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "tags": []
+}

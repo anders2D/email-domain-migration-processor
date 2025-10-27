@@ -1,0 +1,5 @@
+juan@example.com
+maria.garcia.lopez@company.com
+carlos..perez@test.com
+ana@domain.com
+luis.fernando.martinez@mail.com

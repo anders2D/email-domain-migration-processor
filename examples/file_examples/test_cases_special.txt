@@ -1,0 +1,31 @@
+# Casos especiales según PDD sección 3.3
+
+# ❌ Nombres con apóstrofe (BR-005)
+o'brien@example.com
+
+# ❌ Nombres con guión (BR-005)
+maria-jose@example.com
+
+# ❌ Nombres compuestos - múltiples puntos (BR-002)
+maria.del.carmen@example.com
+
+# ❌ Prefijo sin punto (BR-002)
+admin@example.com
+
+# ❌ Múltiples @ (BR-001)
+user@@example.com
+
+# ✅ Caracteres acentuados (permitido)
+josé.garcía@example.com
+
+# ❌ Nombres muy cortos (BR-003/BR-004)
+a.b@example.com
+
+# ✅ Duplicado (primera vez)
+juan.perez@example.com
+
+# ⚠️ Duplicado (segunda vez - debe alertar)
+juan.perez@example.com
+
+# ❌ Prefijos numéricos (BR-005)
+juan.123@example.com

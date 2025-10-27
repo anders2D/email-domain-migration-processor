@@ -1,0 +1,54 @@
+graph TB
+    subgraph PRIMARY["🎯 PRIMARY ADAPTERS (Input/Driving)"]
+        CLI_A[CLI Adapter<br/>main_cli.py]
+        API_A[API Adapter<br/>Flask + Lambda]
+        LIB_A[Library Adapter<br/>Programmatic]
+    end
+
+    subgraph DOMAIN["💎 CORE DOMAIN"]
+        subgraph ENTITY["Entity"]
+            EMAIL[Email<br/>nombre, apellido<br/>correo_original<br/>correo_nuevo]
+        end
+        
+        subgraph SERVICE["Service"]
+            SVC[EmailProcessingService<br/>process_emails]
+        end
+        
+        subgraph PORTS["Ports (Interfaces)"]
+            P1[EmailRepository]
+            P2[EmailWriter]
+            P3[EmailValidator]
+            P4[Logger]
+        end
+    end
+
+    subgraph SECONDARY["🔌 SECONDARY ADAPTERS (Output/Driven)"]
+        FILE_A[File Adapter]
+        CSV_A[CSV Adapter]
+        JSON_A[JSON Adapter]
+        VAL_A[Validation Adapter]
+        LOG_A[Logging Adapter]
+    end
+
+    CLI_A --> SVC
+    API_A --> SVC
+    LIB_A --> SVC
+
+    SVC --> EMAIL
+    SVC --> P1
+    SVC --> P2
+    SVC --> P3
+    SVC --> P4
+
+    P1 -.implements.-> FILE_A
+    P2 -.implements.-> CSV_A
+    P2 -.implements.-> JSON_A
+    P3 -.implements.-> VAL_A
+    P4 -.implements.-> LOG_A
+
+    style PRIMARY fill:#e3f2fd
+    style DOMAIN fill:#e8f5e9
+    style ENTITY fill:#c8e6c9
+    style SERVICE fill:#a5d6a7
+    style PORTS fill:#81c784
+    style SECONDARY fill:#fff3e0

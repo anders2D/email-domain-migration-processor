@@ -1,0 +1,10 @@
+juan.perez@example.com
+invalid@@test.com
+maria.garcia@company.com
+user@nodot.com
+carlos.rodriguez@test.com
+a.b@short.com
+ana.martinez@domain.com
+user123.test@numbers.com
+luis.fernandez@mail.com
+verylongfirstnamethatexceedsthelimitofcharacters.lastname@test.com

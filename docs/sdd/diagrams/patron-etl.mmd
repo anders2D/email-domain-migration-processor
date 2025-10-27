@@ -1,0 +1,32 @@
+graph LR
+    subgraph EXTRACT["📥 FASE 1: EXTRACT"]
+        I1[Input: Archivo/Lista/Texto]
+        I2[Lectura y parsing]
+        I3[Output: List str emails crudos]
+        
+        I1 --> I2 --> I3
+    end
+
+    subgraph TRANSFORM["⚙️ FASE 2: TRANSFORM"]
+        T1[Input: List str]
+        T2[Validación<br/>BR-001 to BR-005]
+        T3[Transformación<br/>TR-001 to TR-005]
+        T4[Output: List Email objetos]
+        
+        T1 --> T2 --> T3 --> T4
+    end
+
+    subgraph GENERATE["📤 FASE 3: GENERATE"]
+        G1[Input: List Email]
+        G2[Serialización]
+        G3[Output: CSV/JSON/Inline/Silent]
+        
+        G1 --> G2 --> G3
+    end
+
+    I3 --> T1
+    T4 --> G1
+
+    style EXTRACT fill:#e3f2fd
+    style TRANSFORM fill:#fff3e0
+    style GENERATE fill:#e8f5e9

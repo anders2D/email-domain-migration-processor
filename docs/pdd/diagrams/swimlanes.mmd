@@ -1,0 +1,28 @@
+%%{init: {'theme':'base'}}%%
+sequenceDiagram
+    participant AS as Área Solicitante
+    participant Email as Email/SharePoint
+    participant AN as Analista de Datos
+    participant Editor as Notepad/VS Code
+    participant Excel as Microsoft Excel
+    
+    Note over AS,Email: Contexto - Fuera de alcance
+    AS->>Email: Envía archivo TXT con listado
+    
+    rect rgb(255, 244, 230)
+    Note over Email,Excel: ALCANCE PDD
+    Email->>AN: Descarga archivo
+    AN->>Editor: Abre y revisa formato
+    Editor-->>AN: Verifica correos válidos
+    AN->>Excel: Copia contenido
+    AN->>Excel: Texto en columnas (separar campos)
+    AN->>Excel: Aplica fórmulas capitalización
+    AN->>Excel: Concatena nuevo correo
+    AN->>Excel: Validación visual y correcciones
+    AN->>Excel: Guarda como CSV
+    AN->>Email: Envía resultado
+    end
+    
+    Note over Email,AS: Contexto - Fuera de alcance
+    Email->>AS: Recibe expected_output.csv
+    AS->>AS: Valida entrega

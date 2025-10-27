@@ -1,0 +1,27 @@
+graph TB
+    INTERNET[🌐 Internet]
+    
+    subgraph AWS["☁️ AWS Cloud"]
+        APIGW[API Gateway HTTP API<br/>email-processor-api<br/>Throttling: 50 req/s]
+        
+        WAF[🛡️ AWS WAF<br/>Rate Limit: 1000 req/5min<br/>Managed Rules]
+        
+        LAMBDA[⚡ AWS Lambda<br/>email-processor<br/>Python 3.11<br/>Memory: 512 MB<br/>Timeout: 30s]
+        
+        CW[📊 CloudWatch Logs<br/>/aws/lambda/email-processor<br/>Retention: 7 days]
+        
+        IAM[🔐 IAM Role<br/>email-processor-role<br/>Permissions: CloudWatch only]
+    end
+
+    INTERNET --> WAF
+    WAF --> APIGW
+    APIGW --> LAMBDA
+    LAMBDA --> CW
+    IAM -.grants.-> LAMBDA
+
+    style AWS fill:#fff3e0
+    style APIGW fill:#e3f2fd
+    style LAMBDA fill:#e8f5e9
+    style WAF fill:#ffebee
+    style CW fill:#f3e5f5
+    style IAM fill:#fce4ec
