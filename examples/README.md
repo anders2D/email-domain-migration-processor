@@ -1,35 +1,35 @@
-# Examples
+# Ejemplos
 
-## 📁 Available Examples
+## 📁 Ejemplos Disponibles
 
-### 🔧 CLI Examples
-- **cli_example.bat** - Windows command-line usage
-- **cli_example.sh** - Linux/Mac command-line usage
+### 🔧 Ejemplos CLI
+- **cli_example.bat** - Uso desde línea de comandos en Windows
+- **cli_example.sh** - Uso desde línea de comandos en Linux/Mac
 
-### 🌐 API Examples
-- **api_example.py** - Local API server usage
-- **lambda_example.bat** - AWS Lambda API (Windows)
-- **lambda_example.sh** - AWS Lambda API (Linux/Mac)
+### 🌐 Ejemplos API
+- **api_example.py** - Uso del servidor API local
+- **lambda_example.bat** - API de AWS Lambda (Windows)
+- **lambda_example.sh** - API de AWS Lambda (Linux/Mac)
 
-### 📚 Library Examples
-- **library_example.py** - Direct Python library usage
+### 📚 Ejemplos de Librería
+- **library_example.py** - Uso directo de la librería Python
 
-### 🔄 Workflow Automation
-- **n8n_workflow.json** - Complete n8n workflow for visual automation
-  - Import into n8n platform
-  - Orchestrates Extract → Transform → Generate flow
-  - Includes API authentication and CSV generation
-  - See [N8N_INTEGRATION.md](../docs/N8N_INTEGRATION.md) for details
+### 🔄 Automatización de Flujos de Trabajo
+- **n8n_workflow.json** - Flujo completo de n8n para automatización visual
+  - Importar en la plataforma n8n
+  - Orquesta el flujo Extraer → Transformar → Generar
+  - Incluye autenticación de API y generación de CSV
+  - Ver [N8N_INTEGRATION.md](../docs/N8N_INTEGRATION.md) para detalles
 
-### 📂 Test Files
-- **file_examples/** - Sample input files for testing
-  - Valid emails, invalid formats, edge cases
-  - See [file_examples/README.md](file_examples/README.md)
+### 📂 Archivos de Prueba
+- **file_examples/** - Archivos de entrada de ejemplo para pruebas
+  - Emails válidos, formatos inválidos, casos extremos
+  - Ver [file_examples/README.md](file_examples/README.md)
 
-### 🧪 Test Suite
-- **tests/run_tests.py** - Automated test runner
+### 🧪 Suite de Pruebas
+- **tests/run_tests.py** - Ejecutor de pruebas automatizadas
 
-## 🚀 Quick Start
+## 🚀 Inicio Rápido
 
 ### CLI
 ```bash
@@ -54,20 +54,20 @@ lambda_example.bat
 sh lambda_example.sh
 ```
 
-### Library
+### Librería
 ```bash
 python library_example.py
 ```
 
-### n8n Workflow
-1. Open n8n
-2. Import `n8n_workflow.json`
-3. Update API key in HTTP Request nodes
-4. Execute workflow
+### Flujo de Trabajo n8n
+1. Abre n8n
+2. Importa `n8n_workflow.json`
+3. Actualiza la API key en los nodos HTTP Request
+4. Ejecuta el flujo de trabajo
 
-## 📖 Documentation
+## 📖 Documentación
 
-- **[Quick Start Guide](../docs/QUICK_START.md)**
-- **[n8n Integration](../docs/N8N_INTEGRATION.md)**
-- **[API Documentation](../docs/API_LAMBDA.md)**
-- **[Deployment Guide](../docs/DEPLOYMENT_GUIDE.md)**
+- **[Guía de Inicio Rápido](../docs/QUICK_START.md)**
+- **[Integración con n8n](../docs/N8N_INTEGRATION.md)**
+- **[Documentación de API](../docs/API_LAMBDA.md)**
+- **[Guía de Despliegue](../docs/DEPLOYMENT_GUIDE.md)**

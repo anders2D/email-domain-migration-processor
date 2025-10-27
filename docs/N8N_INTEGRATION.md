@@ -1,65 +1,65 @@
-# n8n Integration Guide
+# Guía de Integración con n8n
 
-## 🎯 Overview
+## 🎯 Descripción General
 
-This guide explains how to integrate the Email Processor with n8n, a workflow automation platform. The integration allows you to orchestrate the email transformation process visually and connect it with other services.
+Esta guía explica cómo integrar el Procesador de Emails con n8n, una plataforma de automatización de flujos de trabajo. La integración permite orquestar el proceso de transformación de emails visualmente y conectarlo con otros servicios.
 
-## 🏗️ Architecture
+## 🏗️ Arquitectura
 
-The n8n workflow calls the Email Processor API (AWS Lambda) in three sequential steps:
+El flujo de trabajo de n8n invoca la API del Procesador de Emails (AWS Lambda) en tres pasos secuenciales:
 
 ```
-Input Data → Extract → Transform → Generate → Output CSV
+Datos de Entrada → Extraer → Transformar → Generar → Salida CSV
 ```
 
-Each step corresponds to an API endpoint that follows the hexagonal architecture pattern.
+Cada paso corresponde a un endpoint de la API que sigue el patrón de arquitectura hexagonal.
 
-## 📋 Prerequisites
+## 📋 Requisitos Previos
 
-- n8n instance (cloud or self-hosted)
-- Email Processor API deployed on AWS Lambda
-- API Key for authentication
+- Instancia de n8n (cloud o auto-hospedada)
+- API del Procesador de Emails desplegada en AWS Lambda
+- API Key para autenticación
 
-## 🚀 Quick Start
+## 🚀 Inicio Rápido
 
-### 1. Import Workflow
+### 1. Importar Flujo de Trabajo
 
-Import the pre-configured workflow from `examples/n8n_workflow.json`:
+Importa el flujo preconfigurado desde `examples/n8n_workflow.json`:
 
-1. Open n8n
-2. Click **Workflows** → **Import from File**
-3. Select `examples/n8n_workflow.json`
-4. Click **Import**
+1. Abre n8n
+2. Haz clic en **Workflows** → **Import from File**
+3. Selecciona `examples/n8n_workflow.json`
+4. Haz clic en **Import**
 
-### 2. Configure API Credentials
+### 2. Configurar Credenciales de API
 
-Update the API Key in all HTTP Request nodes:
+Actualiza la API Key en todos los nodos HTTP Request:
 
-1. Open each node: **1. Extract**, **2. Transform**, **3. Generate CSV**
-2. Navigate to **Headers** section
-3. Update `x-api-key` value with your API key
-4. Update API URL if using a different endpoint
+1. Abre cada nodo: **1. Extract**, **2. Transform**, **3. Generate CSV**
+2. Navega a la sección **Headers**
+3. Actualiza el valor de `x-api-key` con tu API key
+4. Actualiza la URL de la API si usas un endpoint diferente
 
-**Get your API Key:**
+**Obtener tu API Key:**
 ```bash
 cd terraform
 terraform output api_key
 ```
 
-### 3. Test Workflow
+### 3. Probar Flujo de Trabajo
 
-1. Click **Execute Workflow** button
-2. Check execution results in each node
-3. Download the generated CSV from the last node
+1. Haz clic en el botón **Execute Workflow**
+2. Verifica los resultados de ejecución en cada nodo
+3. Descarga el CSV generado desde el último nodo
 
-## 🔧 Workflow Configuration
+## 🔧 Configuración del Flujo de Trabajo
 
-### Node 1: Input Data
+### Nodo 1: Datos de Entrada
 
-**Type:** Set Node  
-**Purpose:** Define input emails and target domain
+**Tipo:** Set Node  
+**Propósito:** Definir emails de entrada y dominio objetivo
 
-**Configuration:**
+**Configuración:**
 ```json
 {
   "emails": "[\"user1@old.com\",\"user2@old.com\"]",
@@ -67,23 +67,23 @@ terraform output api_key
 }
 ```
 
-**Customization:**
-- Modify `emails` array with your email list
-- Change `new_domain` to your target domain
+**Personalización:**
+- Modifica el array `emails` con tu lista de correos
+- Cambia `new_domain` a tu dominio objetivo
 
-### Node 2: Extract
+### Nodo 2: Extraer
 
-**Type:** HTTP Request  
-**Method:** POST  
+**Tipo:** HTTP Request  
+**Método:** POST  
 **Endpoint:** `/extract`
 
-**Headers:**
+**Encabezados:**
 ```
 x-api-key: prod-email-processor-2024-secure-key
 Content-Type: application/json
 ```
 
-**Body:**
+**Cuerpo:**
 ```json
 {
   "input": ["user1@old.com", "user2@old.com"],
@@ -91,7 +91,7 @@ Content-Type: application/json
 }
 ```
 
-**Response:**
+**Respuesta:**
 ```json
 {
   "emails": ["user1@old.com", "user2@old.com"],
@@ -100,19 +100,19 @@ Content-Type: application/json
 }
 ```
 
-### Node 3: Transform
+### Nodo 3: Transformar
 
-**Type:** HTTP Request  
-**Method:** POST  
+**Tipo:** HTTP Request  
+**Método:** POST  
 **Endpoint:** `/transform`
 
-**Headers:**
+**Encabezados:**
 ```
 x-api-key: prod-email-processor-2024-secure-key
 Content-Type: application/json
 ```
 
-**Body:**
+**Cuerpo:**
 ```json
 {
   "emails": ["user1@old.com", "user2@old.com"],
@@ -120,7 +120,7 @@ Content-Type: application/json
 }
 ```
 
-**Response:**
+**Respuesta:**
 ```json
 {
   "transformed": [
@@ -136,19 +136,19 @@ Content-Type: application/json
 }
 ```
 
-### Node 4: Generate CSV
+### Nodo 4: Generar CSV
 
-**Type:** HTTP Request  
-**Method:** POST  
+**Tipo:** HTTP Request  
+**Método:** POST  
 **Endpoint:** `/generate`
 
-**Headers:**
+**Encabezados:**
 ```
 x-api-key: prod-email-processor-2024-secure-key
 Content-Type: application/json
 ```
 
-**Body:**
+**Cuerpo:**
 ```json
 {
   "transformed": [...],
@@ -156,7 +156,7 @@ Content-Type: application/json
 }
 ```
 
-**Response:**
+**Respuesta:**
 ```json
 {
   "output": "Nombre,Apellido,Correo Ejemplo,Correo Nuevo\nUser1,Old,user1@old.com,user1.old@company.com",
@@ -165,12 +165,12 @@ Content-Type: application/json
 }
 ```
 
-### Node 5: Prepare CSV Download
+### Nodo 5: Preparar Descarga CSV
 
-**Type:** Code Node  
-**Purpose:** Convert CSV string to downloadable binary file
+**Tipo:** Code Node  
+**Propósito:** Convertir string CSV a archivo binario descargable
 
-**Code:**
+**Código:**
 ```javascript
 const item = $input.first().json;
 const csvContent = item.output || '';
@@ -193,155 +193,155 @@ return [{
 }];
 ```
 
-## 🔄 Advanced Workflows
+## 🔄 Flujos de Trabajo Avanzados
 
-### Scheduled Email Processing
+### Procesamiento Programado de Emails
 
-Add a **Cron** trigger to process emails automatically:
-
-```
-Cron Trigger → Read File → Extract → Transform → Generate → Send Email
-```
-
-**Cron Configuration:**
-- **Mode:** Every Day
-- **Hour:** 9:00 AM
-- **Timezone:** Your timezone
-
-### Email Notification
-
-Add an **Email** node after CSV generation:
+Agrega un trigger **Cron** para procesar emails automáticamente:
 
 ```
-Generate CSV → Prepare CSV → Send Email (with attachment)
+Cron Trigger → Leer Archivo → Extraer → Transformar → Generar → Enviar Email
 ```
 
-**Email Configuration:**
-- **To:** recipient@company.com
-- **Subject:** Email Processing Results
-- **Attachments:** Use binary data from previous node
+**Configuración Cron:**
+- **Modo:** Todos los días
+- **Hora:** 9:00 AM
+- **Zona horaria:** Tu zona horaria
 
-### Error Handling
+### Notificación por Email
 
-Add **IF** node to handle errors:
+Agrega un nodo **Email** después de la generación del CSV:
 
 ```
-Transform → IF (check errors) → Send Alert Email
-                              → Continue to Generate
+Generar CSV → Preparar CSV → Enviar Email (con adjunto)
 ```
 
-**IF Condition:**
+**Configuración de Email:**
+- **Para:** destinatario@empresa.com
+- **Asunto:** Resultados del Procesamiento de Emails
+- **Adjuntos:** Usar datos binarios del nodo anterior
+
+### Manejo de Errores
+
+Agrega un nodo **IF** para manejar errores:
+
+```
+Transformar → IF (verificar errores) → Enviar Email de Alerta
+                                     → Continuar a Generar
+```
+
+**Condición IF:**
 ```javascript
 {{ $json.errors.length > 0 }}
 ```
 
-### Multi-Domain Processing
+### Procesamiento Multi-Dominio
 
-Process emails for multiple domains in parallel:
+Procesa emails para múltiples dominios en paralelo:
 
 ```
-Input → Split In Batches → Transform (domain1)
-                         → Transform (domain2)
-                         → Transform (domain3)
-      → Merge → Generate CSV
+Entrada → Dividir en Lotes → Transformar (dominio1)
+                           → Transformar (dominio2)
+                           → Transformar (dominio3)
+        → Combinar → Generar CSV
 ```
 
-## 📊 Monitoring
+## 📊 Monitoreo
 
-### Execution Logs
+### Logs de Ejecución
 
-View execution details in n8n:
+Ver detalles de ejecución en n8n:
 
-1. Go to **Executions** tab
-2. Click on any execution
-3. Review each node's input/output
-4. Check error messages if any
+1. Ve a la pestaña **Executions**
+2. Haz clic en cualquier ejecución
+3. Revisa la entrada/salida de cada nodo
+4. Verifica mensajes de error si los hay
 
-### CloudWatch Integration
+### Integración con CloudWatch
 
-Monitor Lambda invocations from n8n:
+Monitorea invocaciones de Lambda desde n8n:
 
-- **Log Group:** `/aws/lambda/email-processor`
-- **Metrics:** Invocations, Errors, Duration
-- **Retention:** 7 days
+- **Grupo de Logs:** `/aws/lambda/email-processor`
+- **Métricas:** Invocaciones, Errores, Duración
+- **Retención:** 7 días
 
-## 🔐 Security Best Practices
+## 🔐 Mejores Prácticas de Seguridad
 
-### API Key Management
+### Gestión de API Keys
 
-**Don't hardcode API keys in workflows:**
+**No codifiques API keys directamente en los flujos:**
 
-1. Use n8n **Credentials** feature
-2. Create a new credential type: **Header Auth**
-3. Set header name: `x-api-key`
-4. Set header value: Your API key
-5. Reference credential in HTTP Request nodes
+1. Usa la funcionalidad **Credentials** de n8n
+2. Crea un nuevo tipo de credencial: **Header Auth**
+3. Establece el nombre del encabezado: `x-api-key`
+4. Establece el valor del encabezado: Tu API key
+5. Referencia la credencial en los nodos HTTP Request
 
-### Environment Variables
+### Variables de Entorno
 
-Store sensitive data in n8n environment variables:
+Almacena datos sensibles en variables de entorno de n8n:
 
 ```bash
-# .env file (self-hosted n8n)
-EMAIL_PROCESSOR_API_KEY=your-api-key
-EMAIL_PROCESSOR_API_URL=https://your-api.execute-api.us-east-1.amazonaws.com
+# archivo .env (n8n auto-hospedado)
+EMAIL_PROCESSOR_API_KEY=tu-api-key
+EMAIL_PROCESSOR_API_URL=https://tu-api.execute-api.us-east-1.amazonaws.com
 ```
 
-**Access in workflow:**
+**Acceso en el flujo:**
 ```javascript
 {{ $env.EMAIL_PROCESSOR_API_KEY }}
 ```
 
-### Network Security
+### Seguridad de Red
 
-- Use HTTPS endpoints only
-- Enable API Gateway throttling
-- Implement IP whitelisting if needed
-- Use VPC endpoints for private APIs
+- Usa únicamente endpoints HTTPS
+- Habilita throttling en API Gateway
+- Implementa lista blanca de IPs si es necesario
+- Usa endpoints VPC para APIs privadas
 
-## 🐛 Troubleshooting
+## 🐛 Solución de Problemas
 
 ### Error: 401 Unauthorized
 
-**Cause:** Invalid or missing API key
+**Causa:** API key inválida o faltante
 
-**Solution:**
-1. Verify API key in HTTP Request headers
-2. Check API key in AWS API Gateway
-3. Ensure header name is exactly `x-api-key`
+**Solución:**
+1. Verifica la API key en los encabezados HTTP Request
+2. Revisa la API key en AWS API Gateway
+3. Asegúrate de que el nombre del encabezado sea exactamente `x-api-key`
 
 ### Error: 500 Internal Server Error
 
-**Cause:** Lambda execution error
+**Causa:** Error de ejecución de Lambda
 
-**Solution:**
-1. Check CloudWatch logs: `/aws/lambda/email-processor`
-2. Verify request body format
-3. Test endpoint with curl or Postman
+**Solución:**
+1. Revisa los logs de CloudWatch: `/aws/lambda/email-processor`
+2. Verifica el formato del cuerpo de la petición
+3. Prueba el endpoint con curl o Postman
 
 ### Error: Timeout
 
-**Cause:** Lambda cold start or large dataset
+**Causa:** Arranque en frío de Lambda o dataset grande
 
-**Solution:**
-1. Increase n8n HTTP Request timeout (default: 300s)
-2. Process emails in smaller batches
-3. Increase Lambda timeout in Terraform
+**Solución:**
+1. Aumenta el timeout de HTTP Request en n8n (por defecto: 300s)
+2. Procesa emails en lotes más pequeños
+3. Aumenta el timeout de Lambda en Terraform
 
-### Empty CSV Output
+### Salida CSV Vacía
 
-**Cause:** All emails failed validation
+**Causa:** Todos los emails fallaron la validación
 
-**Solution:**
-1. Check `errors` array in Transform response
-2. Review validation rules (BR-001 to BR-005)
-3. Fix email format in input data
+**Solución:**
+1. Revisa el array `errors` en la respuesta de Transform
+2. Revisa las reglas de validación (BR-001 a BR-005)
+3. Corrige el formato de los emails en los datos de entrada
 
-## 📚 Examples
+## 📚 Ejemplos
 
-### Example 1: Basic Processing
+### Ejemplo 1: Procesamiento Básico
 
-**Input:**
+**Entrada:**
 ```json
 {
   "emails": ["john.doe@old.com", "jane.smith@old.com"],
@@ -349,16 +349,16 @@ EMAIL_PROCESSOR_API_URL=https://your-api.execute-api.us-east-1.amazonaws.com
 }
 ```
 
-**Output CSV:**
+**Salida CSV:**
 ```csv
 Nombre,Apellido,Correo Ejemplo,Correo Nuevo
 John,Doe,john.doe@old.com,john.doe@new.com
 Jane,Smith,jane.smith@old.com,jane.smith@new.com
 ```
 
-### Example 2: With Validation Errors
+### Ejemplo 2: Con Errores de Validación
 
-**Input:**
+**Entrada:**
 ```json
 {
   "emails": ["valid@old.com", "invalid", "no@at@sign.com"],
@@ -366,7 +366,7 @@ Jane,Smith,jane.smith@old.com,jane.smith@new.com
 }
 ```
 
-**Transform Response:**
+**Respuesta de Transform:**
 ```json
 {
   "transformed": [
@@ -385,54 +385,54 @@ Jane,Smith,jane.smith@old.com,jane.smith@new.com
 }
 ```
 
-### Example 3: Batch Processing
+### Ejemplo 3: Procesamiento por Lotes
 
-Process 1000+ emails in batches of 100:
-
-```
-Read File → Split In Batches (100) → Extract → Transform → Generate → Merge Results
-```
-
-## 🔗 Integration Patterns
-
-### Pattern 1: File Upload → Process → Download
+Procesa 1000+ emails en lotes de 100:
 
 ```
-Webhook (file upload) → Extract → Transform → Generate → Return CSV
+Leer Archivo → Dividir en Lotes (100) → Extraer → Transformar → Generar → Combinar Resultados
 ```
 
-### Pattern 2: Scheduled Batch Processing
+## 🔗 Patrones de Integración
+
+### Patrón 1: Subir Archivo → Procesar → Descargar
 
 ```
-Cron → Read SharePoint → Extract → Transform → Generate → Upload to S3
+Webhook (subir archivo) → Extraer → Transformar → Generar → Retornar CSV
 ```
 
-### Pattern 3: Event-Driven Processing
+### Patrón 2: Procesamiento por Lotes Programado
 
 ```
-SQS Trigger → Extract → Transform → Generate → Send SNS Notification
+Cron → Leer SharePoint → Extraer → Transformar → Generar → Subir a S3
 ```
 
-### Pattern 4: Multi-Step Approval
+### Patrón 3: Procesamiento Basado en Eventos
 
 ```
-Extract → Transform → Send Approval Email → Wait for Approval → Generate → Deliver
+SQS Trigger → Extraer → Transformar → Generar → Enviar Notificación SNS
 ```
 
-## 📖 Additional Resources
+### Patrón 4: Aprobación Multi-Paso
 
-- **n8n Documentation:** https://docs.n8n.io
-- **Workflow Template:** `examples/n8n_workflow.json`
-- **Visual Flow:** `docs/n8n/n8n_flow.png`
-- **API Documentation:** `docs/API_LAMBDA.md`
-- **Deployment Guide:** `docs/DEPLOYMENT_GUIDE.md`
+```
+Extraer → Transformar → Enviar Email de Aprobación → Esperar Aprobación → Generar → Entregar
+```
 
-## 🆘 Support
+## 📖 Recursos Adicionales
 
-For issues or questions:
+- **Documentación de n8n:** https://docs.n8n.io
+- **Plantilla de Flujo:** `examples/n8n_workflow.json`
+- **Flujo Visual:** `docs/n8n/n8n_flow.png`
+- **Documentación de API:** `docs/API_LAMBDA.md`
+- **Guía de Despliegue:** `docs/DEPLOYMENT_GUIDE.md`
 
-1. Check CloudWatch logs for Lambda errors
-2. Review n8n execution logs
-3. Test API endpoints independently with curl
-4. Verify API key and endpoint URLs
-5. Check validation rules in README.md
+## 🆘 Soporte
+
+Para problemas o preguntas:
+
+1. Revisa los logs de CloudWatch para errores de Lambda
+2. Revisa los logs de ejecución de n8n
+3. Prueba los endpoints de la API independientemente con curl
+4. Verifica la API key y las URLs de los endpoints
+5. Revisa las reglas de validación en README.md

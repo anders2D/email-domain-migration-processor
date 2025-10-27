@@ -1,90 +1,90 @@
-# Email Processor - Hexagonal Architecture
+# Procesador de Correos - Arquitectura Hexagonal
 
-## 🎯 Architecture Principles
+## 🎯 Principios de Arquitectura
 
-- ✅ **Stateless**: No state between requests
-- ✅ **Modular**: Extract → Transform → Generate pattern
-- ✅ **Hexagonal**: Core isolated from infrastructure
-- ✅ **Multi-interface**: CLI, API (Local + Lambda), Library
-- ✅ **Flexible I/O**: Multiple input/output types
+- ✅ **Sin Estado**: Sin estado entre peticiones
+- ✅ **Modular**: Patrón Extraer → Transformar → Generar
+- ✅ **Hexagonal**: Núcleo aislado de la infraestructura
+- ✅ **Multi-interfaz**: CLI, API (Local + Lambda), Librería
+- ✅ **E/S Flexible**: Múltiples tipos de entrada/salida
 
-## 💼 Business Logic
+## 💼 Lógica de Negocio
 
-### Core Workflow
+### Flujo Principal
 
-The system processes email addresses by extracting user information and migrating them to a new domain:
+El sistema procesa direcciones de correo electrónico extrayendo información de usuario y migrándolas a un nuevo dominio:
 
-1. **Extract**: Read emails from various sources (file, list, text)
-2. **Validate**: Apply business rules BR-001 to BR-005
-3. **Transform**: Apply transformation rules TR-001 to TR-005
-4. **Output**: Generate results in CSV, JSON, or inline format
+1. **Extraer**: Leer correos de varias fuentes (archivo, lista, texto)
+2. **Validar**: Aplicar reglas de negocio BR-001 a BR-005
+3. **Transformar**: Aplicar reglas de transformación TR-001 a TR-005
+4. **Generar**: Producir resultados en formato CSV, JSON o en línea
 
-### Validation Rules (BR)
+### Reglas de Validación (BR)
 
-| ID | Rule | Condition | Action if Fails |
-|----|------|-----------|------------------|
-| BR-001 | Exactly one @ | `email.count('@') == 1` | Log and skip |
-| BR-002 | Exactly one dot in prefix | `prefix.count('.') == 1` | Log and skip |
-| BR-003 | First name 2-50 characters | `2 ≤ len(nombre) ≤ 50` | Log and skip |
-| BR-004 | Last name 2-50 characters | `2 ≤ len(apellido) ≤ 50` | Log and skip |
-| BR-005 | Only letters (a-z, A-Z, accented) | `nombre.isalpha()` | Log and skip |
+| ID | Regla | Condición | Acción si Falla |
+|----|-------|-----------|------------------|
+| BR-001 | Exactamente un @ | `email.count('@') == 1` | Registrar y omitir |
+| BR-002 | Exactamente un punto en prefijo | `prefix.count('.') == 1` | Registrar y omitir |
+| BR-003 | Nombre 2-50 caracteres | `2 ≤ len(nombre) ≤ 50` | Registrar y omitir |
+| BR-004 | Apellido 2-50 caracteres | `2 ≤ len(apellido) ≤ 50` | Registrar y omitir |
+| BR-005 | Solo letras (a-z, A-Z, acentuadas) | `nombre.isalpha()` | Registrar y omitir |
 
-**Note:** All validations execute sequentially. If any fails, the email is logged and skipped.
+**Nota:** Todas las validaciones se ejecutan secuencialmente. Si alguna falla, el correo se registra y se omite.
 
-### Transformation Rules (TR)
+### Reglas de Transformación (TR)
 
-| ID | Rule | Example Input | Example Output |
-|----|------|---------------|----------------|
-| TR-001 | Capitalize first name | juan | Juan |
-| TR-002 | Capitalize last name | perez | Perez |
-| TR-003 | Lowercase email | Juan.Perez@NEW.COM | juan.perez@new.com |
-| TR-004 | Preserve original domain | juan.perez@example.com | @example.com |
-| TR-005 | Apply new domain | Juan + Perez + @new.com | juan.perez@new.com |
+| ID | Regla | Entrada Ejemplo | Salida Ejemplo |
+|----|-------|-----------------|----------------|
+| TR-001 | Capitalizar nombre | juan | Juan |
+| TR-002 | Capitalizar apellido | perez | Perez |
+| TR-003 | Minúsculas en correo | Juan.Perez@NEW.COM | juan.perez@new.com |
+| TR-004 | Preservar dominio original | juan.perez@example.com | @example.com |
+| TR-005 | Aplicar nuevo dominio | Juan + Perez + @new.com | juan.perez@new.com |
 
-**Note:** Transformations only apply to emails that passed all validations.
+**Nota:** Las transformaciones solo se aplican a correos que pasaron todas las validaciones.
 
-### Domain Entity (Email)
+### Entidad de Dominio (Email)
 
-**Properties:**
-- `nombre`: First name (capitalized)
-- `apellido`: Last name (capitalized)
-- `correo_original`: Original email address
-- `correo_nuevo`: New email with target domain
+**Propiedades:**
+- `nombre`: Nombre (capitalizado)
+- `apellido`: Apellido (capitalizado)
+- `correo_original`: Dirección de correo original
+- `correo_nuevo`: Nuevo correo con dominio destino
 
-**Behavior:**
-- Automatically capitalizes names
-- Automatically lowercases email addresses
-- Generates new email: `nombre.apellido@new_domain`
+**Comportamiento:**
+- Capitaliza nombres automáticamente
+- Convierte correos a minúsculas automáticamente
+- Genera nuevo correo: `nombre.apellido@nuevo_dominio`
 
-### Process Metrics
+### Métricas del Proceso
 
-| Metric | Value |
-|--------|-------|
-| Processing speed | ~0.1 sec/email |
-| Success rate | 90-95% |
-| Validation errors | 5-10% |
-| Capacity | 10,000+ emails/day (automated) |
+| Métrica | Valor |
+|---------|-------|
+| Velocidad de procesamiento | ~0.1 seg/correo |
+| Tasa de éxito | 90-95% |
+| Errores de validación | 5-10% |
+| Capacidad | 10,000+ correos/día (automatizado) |
 
-## 🏗️ Structure
+## 🏗️ Estructura
 
 ```
 src/features/email_processing/
-├── domain/              # Core Business Logic
-│   ├── email.py        # Entity
+├── domain/              # Lógica de Negocio Principal
+│   ├── email.py        # Entidad
 │   └── ports.py        # Interfaces
 ├── adapters/
-│   ├── input/          # Primary Adapters
+│   ├── input/          # Adaptadores Primarios
 │   │   ├── cli_adapter.py
 │   │   ├── api_adapter.py
 │   │   └── library_adapter.py
-│   └── output/         # Secondary Adapters
+│   └── output/         # Adaptadores Secundarios
 │       ├── file_adapter.py
 │       ├── csv_adapter.py
 │       └── json_adapter.py
-└── shared/             # Validation & Logging
+└── shared/             # Validación y Logging
 ```
 
-## 🚀 Quick Start
+## 🚀 Inicio Rápido
 
 ### CLI
 ```bash
@@ -93,34 +93,34 @@ python main_cli.py --input-type list --input "user@old.com" --new-domain new.com
 
 ### API (Local)
 ```bash
-# Start server
+# Iniciar servidor
 python main_api.py
 
-# Test
+# Probar
 python test_api.py
 ```
 
 ### API (AWS Lambda)
 ```bash
 cd terraform
-build.bat  # or ./build.sh
+build.bat  # o ./build.sh
 terraform apply
 
-# Get API Key
+# Obtener API Key
 terraform output api_key
 ```
 
-**Authentication:** All Lambda API requests require `x-api-key` header.
+**Autenticación:** Todas las peticiones a la API Lambda requieren el header `x-api-key`.
 
 ```bash
-# Example with API Key
+# Ejemplo con API Key
 curl -X POST https://your-api.execute-api.us-east-1.amazonaws.com/transform \
   -H "Content-Type: application/json" \
   -H "x-api-key: prod-email-processor-2024-secure-key" \
   -d '{"emails":["user@old.com"],"new_domain":"new.com"}'
 ```
 
-### Library
+### Librería
 ```python
 from src.features.email_processing.adapters.input.library_adapter import EmailProcessingLibrary
 
@@ -129,112 +129,112 @@ transformed = EmailProcessingLibrary.transform(emails, 'new.com')
 result = EmailProcessingLibrary.generate(transformed, 'inline')
 ```
 
-## 📋 Input Types
-- **file**: Read from file path
-- **list**: Array of emails
-- **text**: Newline-separated text
+## 📋 Tipos de Entrada
+- **file**: Leer desde ruta de archivo
+- **list**: Array de correos
+- **text**: Texto separado por líneas
 
-## 📋 Output Types
-- **csv**: Save to CSV file (default)
-- **json**: Save to JSON file
-- **inline**: Return/print directly
-- **silent**: Process without output (logs only)
+## 📋 Tipos de Salida
+- **csv**: Guardar en archivo CSV (predeterminado)
+- **json**: Guardar en archivo JSON
+- **inline**: Retornar/imprimir directamente
+- **silent**: Procesar sin salida (solo logs)
 
-## 🔐 Security
+## 🔐 Seguridad
 
-### API Key Authentication
+### Autenticación con API Key
 
-The Lambda API uses hardcoded API Key authentication:
+La API Lambda usa autenticación con API Key:
 
 - **Header:** `x-api-key`
-- **Default Key:** `prod-email-processor-2024-secure-key`
-- **Environment Variable:** `API_KEY` in Lambda
-- **Response on failure:** `401 Unauthorized`
+- **Clave por defecto:** `prod-email-processor-2024-secure-key`
+- **Variable de entorno:** `API_KEY` en Lambda
+- **Respuesta en caso de fallo:** `401 Unauthorized`
 
-**Get API Key after deployment:**
+**Obtener API Key después del despliegue:**
 ```bash
 cd terraform
 terraform output api_key
 ```
 
-**Test authentication:**
+**Probar autenticación:**
 ```bash
-# Without API Key (fails)
+# Sin API Key (falla)
 curl -X POST $API_URL/transform -d '{}'
-# Response: {"error": "Unauthorized: Invalid or missing API key"}
+# Respuesta: {"error": "Unauthorized: Invalid or missing API key"}
 
-# With API Key (succeeds)
+# Con API Key (éxito)
 curl -X POST $API_URL/transform -H "x-api-key: YOUR_KEY" -d '{}'
 ```
 
-## 📚 Examples
+## 📚 Ejemplos
 
-See [examples/](examples/) folder for comprehensive usage examples:
-- API examples (local + Lambda with API Key)
-- Library examples
-- CLI examples (Windows + Linux/Mac)
+Ver carpeta [examples/](examples/) para ejemplos completos de uso:
+- Ejemplos de API (local + Lambda con API Key)
+- Ejemplos de librería
+- Ejemplos de CLI (Windows + Linux/Mac)
 
-## 🧪 Testing
+## 🧪 Pruebas
 
 ```bash
 python test_api.py
 ```
 
-## 📖 Documentation
+## 📖 Documentación
 
-### 🚀 Getting Started
+### 🚀 Primeros Pasos
 
-- **[Quick Start Guide](docs/QUICK_START.md)** - Start using in 5 minutes with practical examples
-- **[Deployment Guide](docs/DEPLOYMENT_GUIDE.md)** - Complete deployment and usage documentation
-- **[Cheatsheet](docs/CHEATSHEET.md)** - Quick reference for commands and configurations
-- **[n8n Integration](docs/N8N_INTEGRATION.md)** - Workflow automation with n8n platform
+- **[Guía de Inicio Rápido](docs/QUICK_START.md)** - Comienza a usar en 5 minutos con ejemplos prácticos
+- **[Guía de Despliegue](docs/DEPLOYMENT_GUIDE.md)** - Documentación completa de despliegue y uso
+- **[Hoja de Referencia](docs/CHEATSHEET.md)** - Referencia rápida de comandos y configuraciones
+- **[Integración n8n](docs/N8N_INTEGRATION.md)** - Automatización de flujos con plataforma n8n
 
-### 📋 Process Documentation
+### 📋 Documentación de Procesos
 
-**[docs/pdd/PDD.md](docs/pdd/PDD.md)** - Complete business process documentation:
+**[docs/pdd/PDD.md](docs/pdd/PDD.md)** - Documentación completa del proceso de negocio:
 
-- 📄 **AS-IS Process:** Manual process description with actors, steps, and metrics
-- 📊 **Business Rules:** Validation (BR-001 to BR-005) and transformation rules (TR-001 to TR-005)
-- 🤖 **Automation Analysis:** 100% automation feasibility with technology mapping
-- 🚀 **TO-BE Vision:** Automated process design and benefits comparison
-- ⚠️ **Risk Assessment:** Operational, security, and compliance risks with mitigation strategies
-- 📅 **Transition Roadmap:** 6-month implementation plan
+- 📄 **Proceso AS-IS:** Descripción del proceso manual con actores, pasos y métricas
+- 📊 **Reglas de Negocio:** Validación (BR-001 a BR-005) y reglas de transformación (TR-001 a TR-005)
+- 🤖 **Análisis de Automatización:** Viabilidad de automatización 100% con mapeo de tecnologías
+- 🚀 **Visión TO-BE:** Diseño del proceso automatizado y comparación de beneficios
+- ⚠️ **Evaluación de Riesgos:** Riesgos operacionales, de seguridad y cumplimiento con estrategias de mitigación
+- 📅 **Hoja de Ruta de Transición:** Plan de implementación de 6 meses
 
-### 📊 Process Diagrams
+### 📊 Diagramas de Procesos
 
-**[docs/pdd/diagrams/](docs/pdd/diagrams/)** - Visual process documentation:
+**[docs/pdd/diagrams/](docs/pdd/diagrams/)** - Documentación visual de procesos:
 
-| Diagram | Description | Section |
-|---------|-------------|----------|
-| `macroproceso.mmd` | Organizational context (upstream/downstream) | 1.1 |
-| `swimlanes.mmd` | Actor interaction sequence | 1.1 |
-| `alcance.mmd` | Scope visualization (in/out) | 1.2 |
-| `entradas-salidas.mmd` | Input/output data flow | 1.3-1.4 |
-| `flujo-detallado.mmd` | Detailed AS-IS manual flow | 1.8 |
-| `heatmap-automatizacion.mmd` | Automation feasibility heatmap | 4.2 |
-| `proceso-tobe.mmd` | TO-BE automated process | 5.1 |
-| `roadmap-transicion.mmd` | 6-month transition Gantt | 5.3 |
+| Diagrama | Descripción | Sección |
+|----------|-------------|----------|
+| `macroproceso.mmd` | Contexto organizacional (upstream/downstream) | 1.1 |
+| `swimlanes.mmd` | Secuencia de interacción de actores | 1.1 |
+| `alcance.mmd` | Visualización de alcance (dentro/fuera) | 1.2 |
+| `entradas-salidas.mmd` | Flujo de datos entrada/salida | 1.3-1.4 |
+| `flujo-detallado.mmd` | Flujo manual AS-IS detallado | 1.8 |
+| `heatmap-automatizacion.mmd` | Mapa de calor de viabilidad de automatización | 4.2 |
+| `proceso-tobe.mmd` | Proceso automatizado TO-BE | 5.1 |
+| `roadmap-transicion.mmd` | Gantt de transición de 6 meses | 5.3 |
 
-**Generate Diagrams:**
+**Generar Diagramas:**
 ```bash
 cd docs/pdd/diagrams
 sh convert.sh
 ```
 
-**Requirements:**
+**Requisitos:**
 ```bash
 npm install -g @mermaid-js/mermaid-cli
 ```
 
-## 🚢 Deployment
+## 🚢 Despliegue
 
-See [terraform/README.md](terraform/README.md) for AWS deployment instructions.
+Ver [terraform/README.md](terraform/README.md) para instrucciones de despliegue en AWS.
 
-### CloudWatch Logs
+### Logs de CloudWatch
 
-Logs are automatically saved to CloudWatch:
+Los logs se guardan automáticamente en CloudWatch:
 
-- **Lambda logs:** `/aws/lambda/email-processor`
-- **API Gateway logs:** `/aws/apigateway/email-processor`
-- **Retention:** 7 days
-- **Includes:** Request/response, errors, validation failures, API key validation
+- **Logs de Lambda:** `/aws/lambda/email-processor`
+- **Logs de API Gateway:** `/aws/apigateway/email-processor`
+- **Retención:** 7 días
+- **Incluye:** Request/response, errores, fallos de validación, validación de API key
