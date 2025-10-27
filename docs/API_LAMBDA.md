@@ -1,32 +1,32 @@
-# Lambda API Documentation
+# Documentación API Lambda
 
-## 🌐 Base URL
+## 🌐 URL Base
 
 ```
 https://{api-id}.execute-api.{region}.amazonaws.com
 ```
 
-Get your API URL after deployment:
+Obtén tu URL de API después del despliegue:
 ```bash
 cd terraform
 terraform output api_url
 ```
 
-## 🔐 Authentication
+## 🔐 Autenticación
 
-All requests require API Key authentication.
+Todas las peticiones requieren autenticación con API Key.
 
 **Header:**
 ```
 x-api-key: prod-email-processor-2024-secure-key
 ```
 
-**Get API Key:**
+**Obtener API Key:**
 ```bash
 terraform output api_key
 ```
 
-**Unauthorized Response (401):**
+**Respuesta No Autorizada (401):**
 ```json
 {
   "error": "Unauthorized: Invalid or missing API key"
@@ -37,9 +37,9 @@ terraform output api_key
 
 ### POST /extract
 
-Extract and validate emails from different input sources.
+Extrae y valida correos de diferentes fuentes de entrada.
 
-**Request (List Input):**
+**Petición (Entrada de Lista):**
 ```json
 {
   "input_type": "list",
@@ -47,7 +47,7 @@ Extract and validate emails from different input sources.
 }
 ```
 
-**Request (Text Input):**
+**Petición (Entrada de Texto):**
 ```json
 {
   "input_type": "text",
@@ -55,7 +55,7 @@ Extract and validate emails from different input sources.
 }
 ```
 
-**Request (File Input - Base64):**
+**Petición (Entrada de Archivo - Base64):**
 ```json
 {
   "input_type": "file",
@@ -63,14 +63,14 @@ Extract and validate emails from different input sources.
 }
 ```
 
-**Parameters:**
-| Field | Type | Required | Description |
+**Parámetros:**
+| Campo | Tipo | Requerido | Descripción |
 |-------|------|----------|-------------|
-| `input_type` | string | No | Input type: `list`, `text`, `file` (default: `list`) |
-| `input` | array/string | Conditional | Emails array or text (required if not `file`) |
-| `file_content` | string | Conditional | Base64 encoded file (required if `input_type=file`) |
+| `input_type` | string | No | Tipo de entrada: `list`, `text`, `file` (predeterminado: `list`) |
+| `input` | array/string | Condicional | Array de correos o texto (requerido si no es `file`) |
+| `file_content` | string | Condicional | Archivo codificado en Base64 (requerido si `input_type=file`) |
 
-**Success Response (200):**
+**Respuesta Exitosa (200):**
 ```json
 {
   "emails": ["juan.perez@example.com", "maria.garcia@old.com"],
@@ -82,9 +82,9 @@ Extract and validate emails from different input sources.
 
 ### POST /transform
 
-Transform emails to a new domain.
+Transforma correos a un nuevo dominio.
 
-**Request:**
+**Petición:**
 ```json
 {
   "emails": ["juan.perez@example.com", "maria.garcia@old.com"],
@@ -92,13 +92,13 @@ Transform emails to a new domain.
 }
 ```
 
-**Parameters:**
-| Field | Type | Required | Description |
+**Parámetros:**
+| Campo | Tipo | Requerido | Descripción |
 |-------|------|----------|-------------|
-| `emails` | array | Yes | List of email addresses to transform |
-| `new_domain` | string | Yes | Target domain (without @) |
+| `emails` | array | Sí | Lista de direcciones de correo a transformar |
+| `new_domain` | string | Sí | Dominio destino (sin @) |
 
-**Success Response (200):**
+**Respuesta Exitosa (200):**
 ```json
 {
   "transformed": [
@@ -126,9 +126,9 @@ Transform emails to a new domain.
 
 ### POST /generate
 
-Generate output in specified format.
+Genera salida en el formato especificado.
 
-**Request:**
+**Petición:**
 ```json
 {
   "transformed": [
@@ -144,13 +144,13 @@ Generate output in specified format.
 }
 ```
 
-**Parameters:**
-| Field | Type | Required | Description |
+**Parámetros:**
+| Campo | Tipo | Requerido | Descripción |
 |-------|------|----------|-------------|
-| `transformed` | array | Yes | Array of transformed email objects |
-| `output_type` | string | No | Output format: `inline`, `csv`, `json`, `silent` (default: `inline`) |
+| `transformed` | array | Sí | Array de objetos de correo transformados |
+| `output_type` | string | No | Formato de salida: `inline`, `csv`, `json`, `silent` (predeterminado: `inline`) |
 
-**Success Response (200) - Inline/JSON:**
+**Respuesta Exitosa (200) - Inline/JSON:**
 ```json
 {
   "data": [{...}],
@@ -158,7 +158,7 @@ Generate output in specified format.
 }
 ```
 
-**Success Response (200) - CSV:**
+**Respuesta Exitosa (200) - CSV:**
 ```json
 {
   "output": "Nombre,Apellido,Correo Original,Correo Nuevo\nJuan,Perez,juan.perez@example.com,juan.perez@new.com",
@@ -167,7 +167,7 @@ Generate output in specified format.
 }
 ```
 
-**Success Response (200) - Silent:**
+**Respuesta Exitosa (200) - Silent:**
 ```json
 {
   "count": 2,
@@ -175,63 +175,63 @@ Generate output in specified format.
 }
 ```
 
-**Error Response (400):**
+**Respuesta de Error (400):**
 ```json
 {
   "error": "Missing required field: emails"
 }
 ```
 
-**Error Response (500):**
+**Respuesta de Error (500):**
 ```json
 {
   "error": "Internal server error: {details}"
 }
 ```
 
-## 🔄 Pipeline Flow
+## 🔄 Flujo del Pipeline
 
-The API supports both **modular** (3 steps) and **direct** workflows:
+La API soporta flujos de trabajo **modulares** (3 pasos) y **directos**:
 
-**Modular Pipeline:**
+**Pipeline Modular:**
 ```
-1. POST /extract  → Get emails array
-2. POST /transform → Transform emails
-3. POST /generate → Format output
+1. POST /extract  → Obtener array de correos
+2. POST /transform → Transformar correos
+3. POST /generate → Formatear salida
 ```
 
-**Direct Workflow (deprecated):**
-Use `/transform` with `input_type` for single-step processing.
+**Flujo Directo (obsoleto):**
+Usa `/transform` con `input_type` para procesamiento de un solo paso.
 
-## 📋 Validation Rules
+## 📋 Reglas de Validación
 
-Emails must pass all validation rules (BR-001 to BR-005):
+Los correos deben pasar todas las reglas de validación (BR-001 a BR-005):
 
-| Rule | Description | Example Fail |
-|------|-------------|--------------|
-| BR-001 | Exactly one @ | `user@@example.com` |
-| BR-002 | Exactly one dot in prefix | `user@example.com` |
-| BR-003 | First name 2-50 chars | `a.perez@example.com` |
-| BR-004 | Last name 2-50 chars | `juan.p@example.com` |
-| BR-005 | Only letters (a-z, accents) | `juan123.perez@example.com` |
+| Regla | Descripción | Ejemplo de Fallo |
+|-------|-------------|--------------|
+| BR-001 | Exactamente un @ | `user@@example.com` |
+| BR-002 | Exactamente un punto en prefijo | `user@example.com` |
+| BR-003 | Nombre 2-50 caracteres | `a.perez@example.com` |
+| BR-004 | Apellido 2-50 caracteres | `juan.p@example.com` |
+| BR-005 | Solo letras (a-z, acentos) | `juan123.perez@example.com` |
 
-**Invalid emails are skipped and logged in CloudWatch.**
+**Los correos inválidos se omiten y se registran en CloudWatch.**
 
-## 🔄 Transformation Rules
+## 🔄 Reglas de Transformación
 
-Valid emails are transformed (TR-001 to TR-005):
+Los correos válidos se transforman (TR-001 a TR-005):
 
-| Rule | Transformation | Example |
-|------|----------------|---------|
-| TR-001 | Capitalize first name | `juan` → `Juan` |
-| TR-002 | Capitalize last name | `perez` → `Perez` |
-| TR-003 | Lowercase email | `Juan.Perez@NEW.COM` → `juan.perez@new.com` |
-| TR-004 | Preserve original domain | Stored in `correo_original` |
-| TR-005 | Apply new domain | `juan.perez@new.com` |
+| Regla | Transformación | Ejemplo |
+|-------|----------------|---------|
+| TR-001 | Capitalizar nombre | `juan` → `Juan` |
+| TR-002 | Capitalizar apellido | `perez` → `Perez` |
+| TR-003 | Minúsculas en correo | `Juan.Perez@NEW.COM` → `juan.perez@new.com` |
+| TR-004 | Preservar dominio original | Almacenado en `correo_original` |
+| TR-005 | Aplicar nuevo dominio | `juan.perez@new.com` |
 
-## 📝 Examples
+## 📝 Ejemplos
 
-### cURL - Modular Pipeline (3 Steps)
+### cURL - Pipeline Modular (3 Pasos)
 
 ```bash
 API_URL="https://your-api.execute-api.us-east-1.amazonaws.com"
@@ -258,7 +258,7 @@ curl -X POST $API_URL/generate \
   -d "{\"transformed\":$TRANSFORMED,\"output_type\":\"csv\"}"
 ```
 
-### cURL - Extract from File (Base64)
+### cURL - Extraer desde Archivo (Base64)
 
 ```bash
 # Encode file to base64
@@ -273,7 +273,7 @@ curl -X POST https://your-api.execute-api.us-east-1.amazonaws.com/extract \
   }"
 ```
 
-### Python - Modular Pipeline
+### Python - Pipeline Modular
 
 ```python
 import requests
@@ -309,7 +309,7 @@ generate_response = requests.post(
 print(generate_response.json()['output'])
 ```
 
-### Python - Extract from File
+### Python - Extraer desde Archivo
 
 ```python
 import requests
@@ -334,7 +334,7 @@ response = requests.post(url, json=payload, headers=headers)
 print(response.json()['emails'])
 ```
 
-### JavaScript (Node.js) - Modular Pipeline
+### JavaScript (Node.js) - Pipeline Modular
 
 ```javascript
 const axios = require('axios');
@@ -370,7 +370,7 @@ async function processEmails() {
 processEmails();
 ```
 
-### PowerShell - Modular Pipeline
+### PowerShell - Pipeline Modular
 
 ```powershell
 $baseUrl = "https://your-api.execute-api.us-east-1.amazonaws.com"
@@ -409,56 +409,56 @@ $generateRes = Invoke-RestMethod -Uri "$baseUrl/generate" `
 Write-Output $generateRes.output
 ```
 
-## 📊 Response Codes
+## 📊 Códigos de Respuesta
 
-| Code | Description |
-|------|-------------|
-| 200 | Success - Emails processed |
-| 400 | Bad Request - Invalid input |
-| 401 | Unauthorized - Invalid/missing API key |
-| 500 | Internal Server Error |
+| Código | Descripción |
+|--------|-------------|
+| 200 | Éxito - Correos procesados |
+| 400 | Petición Incorrecta - Entrada inválida |
+| 401 | No Autorizado - API key inválida/faltante |
+| 500 | Error Interno del Servidor |
 
-## 📈 CloudWatch Logs
+## 📈 Logs de CloudWatch
 
-**Log Group:** `/aws/lambda/email-processor`
+**Grupo de Logs:** `/aws/lambda/email-processor`
 
-**Retention:** 7 days
+**Retención:** 7 días
 
-**Logged Events:**
-- API key validation (success/failure)
-- Request payload
-- Validation failures (BR-001 to BR-005)
-- Transformation results
-- Errors and exceptions
+**Eventos Registrados:**
+- Validación de API key (éxito/fallo)
+- Payload de petición
+- Fallos de validación (BR-001 a BR-005)
+- Resultados de transformación
+- Errores y excepciones
 
-**View Logs:**
+**Ver Logs:**
 ```bash
 aws logs tail /aws/lambda/email-processor --follow
 ```
 
-## ⚡ Performance
+## ⚡ Rendimiento
 
-| Metric | Value |
-|--------|-------|
-| Cold start | ~2-3 seconds |
-| Warm execution | ~100-300ms |
-| Timeout | 30 seconds |
-| Memory | 256 MB |
-| Max payload | 6 MB |
+| Métrica | Valor |
+|---------|-------|
+| Arranque en frío | ~2-3 segundos |
+| Ejecución en caliente | ~100-300ms |
+| Timeout | 30 segundos |
+| Memoria | 256 MB |
+| Payload máximo | 6 MB |
 
-## 🔒 Security
+## 🔒 Seguridad
 
-- ✅ API Key authentication required
-- ✅ HTTPS only (TLS 1.2+)
-- ✅ CORS disabled by default
-- ✅ CloudWatch logging enabled
-- ✅ IAM role with minimal permissions
+- ✅ Autenticación con API Key requerida
+- ✅ Solo HTTPS (TLS 1.2+)
+- ✅ CORS deshabilitado por defecto
+- ✅ Logging de CloudWatch habilitado
+- ✅ Rol IAM con permisos mínimos
 
-## 🚀 Deployment
+## 🚀 Despliegue
 
-See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for complete deployment instructions.
+Ver [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) para instrucciones completas de despliegue.
 
-**Quick Deploy:**
+**Despliegue Rápido:**
 ```bash
 cd terraform
 build.bat  # Windows
@@ -469,15 +469,15 @@ terraform init
 terraform apply
 ```
 
-**Get Credentials:**
+**Obtener Credenciales:**
 ```bash
 terraform output api_url
 terraform output api_key
 ```
 
-## 🧪 Testing
+## 🧪 Pruebas
 
-Test the deployed API:
+Probar la API desplegada:
 
 ```bash
 # Get API details
@@ -492,10 +492,10 @@ curl -X POST $API_URL/transform \
   -d '{"emails":["test@example.com"],"new_domain":"new.com"}'
 ```
 
-## 📞 Support
+## 📞 Soporte
 
-For issues or questions:
-1. Check CloudWatch logs for errors
-2. Verify API key is correct
-3. Validate request payload format
-4. Review validation rules (BR-001 to BR-005)
+Para problemas o preguntas:
+1. Revisar logs de CloudWatch para errores
+2. Verificar que la API key sea correcta
+3. Validar formato del payload de petición
+4. Revisar reglas de validación (BR-001 a BR-005)
