@@ -14,6 +14,7 @@ def main():
     print("=== Email Processing API - Modular & Stateless ===")
     print("Server: http://localhost:5000")
     print("\nEndpoints:")
+    print("  POST /validate   - Validate a single email")
     print("  POST /extract    - Extract emails from source")
     print("  POST /transform  - Transform emails with new domain")
     print("  POST /generate   - Generate output in format")

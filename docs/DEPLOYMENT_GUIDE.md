@@ -94,6 +94,15 @@ python main_api.py
 ### Sintaxis General
 
 ```bash
+# Opción 1: Usando PyPI (recomendado)
+email-processor \
+  --input-type <file|list|text> \
+  --input <datos> \
+  --new-domain <dominio> \
+  --output-type <csv|json|inline|silent> \
+  --output <archivo>
+
+# Opción 2: Usando código fuente
 python main_cli.py \
   --input-type <file|list|text> \
   --input <datos> \
@@ -117,6 +126,15 @@ python main_cli.py \
 #### 1. Procesar Archivo a CSV
 
 ```bash
+# PyPI
+email-processor \
+  --input-type file \
+  --input examples/file_examples/sample_emails.txt \
+  --new-domain company.com \
+  --output-type csv \
+  --output result.csv
+
+# Código fuente
 python main_cli.py \
   --input-type file \
   --input examples/file_examples/sample_emails.txt \
@@ -135,6 +153,15 @@ python main_cli.py \
 #### 2. Procesar Lista a JSON
 
 ```bash
+# PyPI
+email-processor \
+  --input-type list \
+  --input "juan.perez@old.com,ana.garcia@old.com" \
+  --new-domain newcompany.com \
+  --output-type json \
+  --output result.json
+
+# Código fuente
 python main_cli.py \
   --input-type list \
   --input "juan.perez@old.com,ana.garcia@old.com" \
@@ -146,6 +173,15 @@ python main_cli.py \
 #### 3. Procesar Texto a Inline (sin archivo)
 
 ```bash
+# PyPI
+email-processor \
+  --input-type text \
+  --input "user@old.com
+admin@old.com" \
+  --new-domain company.com \
+  --output-type inline
+
+# Código fuente
 python main_cli.py \
   --input-type text \
   --input "user@old.com
@@ -163,6 +199,14 @@ admin@company.com
 #### 4. Modo Silencioso (solo logs)
 
 ```bash
+# PyPI
+email-processor \
+  --input-type file \
+  --input emails.txt \
+  --new-domain company.com \
+  --output-type silent
+
+# Código fuente
 python main_cli.py \
   --input-type file \
   --input emails.txt \
@@ -173,6 +217,15 @@ python main_cli.py \
 ### Windows (PowerShell)
 
 ```powershell
+# PyPI
+email-processor `
+  --input-type file `
+  --input examples\file_examples\sample_emails.txt `
+  --new-domain company.com `
+  --output-type csv `
+  --output result.csv
+
+# Código fuente
 python main_cli.py `
   --input-type file `
   --input examples\file_examples\sample_emails.txt `
@@ -739,7 +792,10 @@ aws logs tail /aws/apigateway/email-processor --follow
 #### CLI
 
 ```bash
-# Logs en consola
+# Logs en consola (PyPI)
+email-processor --input-type file --input emails.txt --new-domain company.com --output-type csv --output result.csv
+
+# Logs en consola (código fuente)
 python main_cli.py --input-type file --input emails.txt --new-domain company.com --output-type csv --output result.csv
 
 # Archivos generados:
@@ -943,7 +999,10 @@ logging.basicConfig(level=logging.DEBUG)
 #### Ver stack trace completo
 
 ```bash
-# CLI
+# CLI (PyPI)
+email-processor ... 2>&1 | tee debug.log
+
+# CLI (código fuente)
 python main_cli.py ... 2>&1 | tee debug.log
 
 # API

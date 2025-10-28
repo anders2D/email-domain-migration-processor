@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="email-processor-cli",
-    version="2025.10.27.192353",
+    version="2025.10.27.192812",
     author="Anderson Taguada",
     author_email="your.email@example.com",
     description="CLI tool for email processing with domain migration",

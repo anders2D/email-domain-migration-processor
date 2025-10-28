@@ -33,7 +33,9 @@ def handler(event, context):
         path = event.get('rawPath', event.get('path', ''))
         body = json.loads(event.get('body', '{}'))
         
-        if '/extract' in path:
+        if '/validate' in path:
+            return validate_email(body)
+        elif '/extract' in path:
             return extract(body)
         elif '/transform' in path:
             return transform(body)
@@ -45,6 +47,22 @@ def handler(event, context):
     except Exception as e:
         logger.error(f"Error: {e}", exc_info=True)
         return response(500, {'error': str(e)})
+
+def validate_email(data):
+    try:
+        email = data.get('email')
+        if not email:
+            return response(400, {'error': 'Missing required field: email'})
+        
+        try:
+            lambda_adapter.validator.validate_and_parse(email)
+            return response(200, {'valid': True, 'email': email})
+        except Exception as e:
+            return response(200, {'valid': False, 'email': email, 'error': str(e)})
+    except Exception as e:
+        logger.error(f"Validate error: {e}", exc_info=True)
+        return response(500, {'error': f'Internal server error: {str(e)}'})
+
 
 def extract(data):
     try:
@@ -100,20 +118,35 @@ def generate(data):
         if not transformed:
             return response(400, {'error': 'Missing required field: transformed'})
         
-        # Filter valid emails
-        valid_items = [item for item in transformed if item.get('valid', True)]
+        # Convert to Email objects
+        from src.features.email_processing.domain.email import Email
+        email_objects = []
+        for item in transformed:
+            if item.get('valid', True):
+                email_obj = Email.create(
+                    nombre=item['nombre'],
+                    apellido=item['apellido'],
+                    correo_original=item['correo_original'],
+                    nuevo_dominio=item['correo_nuevo'].split('@')[1]
+                )
+                email_objects.append(email_obj)
         
         if output_type == 'inline':
-            return response(200, {'data': valid_items, 'count': len(valid_items)})
+            from src.features.email_processing.domain.output_service import OutputService
+            emails = OutputService.generate_inline(email_objects)
+            return response(200, {'emails': emails, 'count': len(emails)})
         elif output_type == 'csv':
-            csv_lines = ['Nombre,Apellido,Correo Original,Correo Nuevo']
-            for item in valid_items:
-                csv_lines.append(f"{item['nombre']},{item['apellido']},{item['correo_original']},{item['correo_nuevo']}")
-            return response(200, {'output': '\n'.join(csv_lines), 'format': 'csv', 'count': len(valid_items)})
+            from src.features.email_processing.adapters.output.csv_adapter import CsvFormatter
+            content = CsvFormatter().format(email_objects)
+            return response(200, {'content': content, 'format': 'csv', 'count': len(email_objects)})
         elif output_type == 'json':
-            return response(200, {'data': valid_items, 'format': 'json', 'count': len(valid_items)})
+            from src.features.email_processing.adapters.output.json_adapter import JsonFormatter
+            content = JsonFormatter().format(email_objects)
+            return response(200, {'content': content, 'format': 'json', 'count': len(email_objects)})
         elif output_type == 'silent':
-            return response(200, {'count': len(valid_items), 'status': 'processed'})
+            from src.features.email_processing.domain.output_service import OutputService
+            count = OutputService.generate_silent(email_objects)
+            return response(200, {'count': count})
         else:
             return response(400, {'error': f'Invalid output_type: {output_type}'})
     except Exception as e:

@@ -111,3 +111,61 @@ chmod +x scripts/publish_timestamp.sh
 - [PYPI_DEPLOYMENT.md](../docs/PYPI_DEPLOYMENT.md)
 - [PYPI_QUICKSTART.md](../docs/PYPI_QUICKSTART.md)
 - [PYPI_SETUP_SUMMARY.md](../PYPI_SETUP_SUMMARY.md)
+
+## 📄 Generación de PDFs
+
+### md_to_pdf.bat / md_to_pdf.sh
+
+Convierte archivos Markdown a PDFs estilizados usando Pandoc + LaTeX + Eisvogel.
+
+**Windows:**
+```bash
+scripts\md_to_pdf.bat
+```
+
+**Linux/Mac:**
+```bash
+chmod +x scripts/md_to_pdf.sh
+./scripts/md_to_pdf.sh
+```
+
+**Requisitos previos:**
+- Pandoc instalado
+- LaTeX instalado (MiKTeX, MacTeX, o TeX Live)
+- Eisvogel template instalado
+
+**Qué hace:**
+1. Verifica que Pandoc esté instalado
+2. Convierte automáticamente:
+   - `README.md` → `README.pdf`
+   - `docs/PDD.md` → `docs/PDD.pdf`
+   - `docs/DEPLOYMENT_GUIDE.md` → `docs/DEPLOYMENT_GUIDE.pdf`
+   - `docs/QUICK_START.md` → `docs/QUICK_START.pdf`
+3. Genera PDFs con:
+   - Portada profesional
+   - Tabla de contenidos
+   - Sintaxis resaltada
+   - Tipografía optimizada
+
+### install_eisvogel.bat / install_eisvogel.sh
+
+Instala el template Eisvogel para Pandoc.
+
+**Windows:**
+```bash
+scripts\install_eisvogel.bat
+```
+
+**Linux/Mac:**
+```bash
+chmod +x scripts/install_eisvogel.sh
+./scripts/install_eisvogel.sh
+```
+
+**Qué hace:**
+1. Crea directorio de templates de Pandoc
+2. Descarga eisvogel.tex desde GitHub
+3. Instala en la ubicación correcta según el sistema operativo
+
+**Ver documentación completa:**
+- [PDF_GENERATION.md](../docs/PDF_GENERATION.md)

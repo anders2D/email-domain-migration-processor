@@ -20,52 +20,43 @@ wheels/
 .installed.cfg
 *.egg
 
-# Virtual Environment
+# Virtual environments
 venv/
-env/
 ENV/
-.venv
+env/
 
-# IDE
+# IDEs
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 
-# AWS
-.terraform/
-*.tfstate
-*.tfstate.*
-terraform.tfvars
-.terraform.lock.hcl
-
-# Logs
-*.log
-logs/
-
 # OS
 .DS_Store
 Thumbs.db
 
-# Output files
-expected_output.csv
-output.json
-*.zip
-*.csv
-*.json
-!examples/n8n_workflow.json
-!examples/file_examples/*.txt
+# Project specific
+correos_procesados.csv
 error_log.txt
 summary.txt
+*.log
+expected_output.csv
+output.csv
+output.json
 
-# Secrets
-.env
-secrets.json
-credentials.json
-.pypirc
+# Terraform
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.backup
+terraform/.terraform.lock.hcl
+terraform/lambda_function.zip
 
 # PyPI
-build/
-dist/
-*.egg-info/
+.pypirc
+*.whl
+*.tar.gz
+
+# PDFs generados
+*.pdf
+!docs/assets/*.pdf

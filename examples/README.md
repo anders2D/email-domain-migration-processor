@@ -31,7 +31,16 @@
 
 ## 🚀 Inicio Rápido
 
-### CLI
+### CLI (PyPI - Recomendado)
+```bash
+# Instalar
+pip install email-processor-cli
+
+# Usar
+email-processor --input-type list --input "user@old.com" --new-domain new.com --output-type inline
+```
+
+### CLI (Código Fuente)
 ```bash
 # Windows
 cli_example.bat

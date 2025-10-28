@@ -43,3 +43,12 @@ class EmailWriter(ABC):
     @abstractmethod
     def save_emails(self, emails: List, destination: str) -> None:
         pass
+
+
+class OutputFormatter(ABC):
+    """Port for output formatting (returns string instead of writing to file)."""
+    
+    @abstractmethod
+    def format(self, emails: List) -> str:
+        """Format emails to string representation."""
+        pass

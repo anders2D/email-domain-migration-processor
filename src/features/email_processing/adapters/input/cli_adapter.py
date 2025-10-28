@@ -80,6 +80,14 @@ EXAMPLES:
         logger.info(f"Extracted {len(emails)} emails")
         return emails
     
+    def validate(self, email: str) -> bool:
+        """Validate a single email."""
+        try:
+            self.validator.validate_and_parse(email)
+            return True
+        except:
+            return False
+    
     def transform(self, emails: list, new_domain: str, error_logger: ErrorLogger = None) -> list:
         logger.info(f"Transforming {len(emails)} emails to domain {new_domain}")
         

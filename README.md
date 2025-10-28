@@ -118,6 +118,29 @@ src/features/email_processing/
 └── shared/             # Validación y Logging
 ```
 
+## ⚠️ Antes de Empezar
+
+### Formato de Correo Requerido
+
+El sistema requiere que los correos tengan el formato `nombre.apellido@dominio.com`:
+
+✅ **Válidos:**
+- `juan.perez@company.com`
+- `maria.garcia@example.com`
+- `carlos.rodriguez@domain.com`
+
+❌ **Inválidos:**
+- `user@company.com` (falta punto separador)
+- `j.perez@company.com` (nombre muy corto, mínimo 2 caracteres)
+- `juan123.perez@company.com` (números no permitidos)
+- `invalid@email@com` (múltiples símbolos @)
+
+**Reglas de validación:**
+- Exactamente un símbolo `@`
+- Exactamente un punto `.` antes del `@`
+- Nombre y apellido: 2-50 caracteres cada uno
+- Solo letras (a-z, A-Z, acentuadas)
+
 ## 📦 Instalación
 
 ### Requisitos Previos
@@ -153,12 +176,12 @@ python main_cli.py --help
 
 **Instalado desde PyPI:**
 ```bash
-email-processor --input-type list --input "user@old.com" --new-domain new.com --output-type inline
+email-processor --input-type list --input "juan.perez@old.com" --new-domain new.com --output-type inline
 ```
 
 **Desde código fuente:**
 ```bash
-python main_cli.py --input-type list --input "user@old.com" --new-domain new.com --output-type inline
+python main_cli.py --input-type list --input "juan.perez@old.com" --new-domain new.com --output-type inline
 ```
 
 ### 🎬 Demos en Acción
@@ -209,16 +232,23 @@ terraform output api_key
 curl -X POST https://your-api.execute-api.us-east-1.amazonaws.com/transform \
   -H "Content-Type: application/json" \
   -H "x-api-key: prod-email-processor-2024-secure-key" \
-  -d '{"emails":["user@old.com"],"new_domain":"new.com"}'
+  -d '{"emails":["juan.perez@old.com"],"new_domain":"new.com"}'
 ```
 
 ### Librería
 ```python
 from src.features.email_processing.adapters.input.library_adapter import EmailProcessingLibrary
 
-emails = EmailProcessingLibrary.extract(['user@old.com'], 'list')
+# Extraer correos
+emails = EmailProcessingLibrary.extract(['juan.perez@old.com'], 'list')
+
+# Transformar a nuevo dominio
 transformed = EmailProcessingLibrary.transform(emails, 'new.com')
+
+# Generar salida (inline, csv o json)
 result = EmailProcessingLibrary.generate(transformed, 'inline')
+# Para CSV: EmailProcessingLibrary.generate(transformed, 'csv', output_file='output.csv')
+# Para JSON: EmailProcessingLibrary.generate(transformed, 'json', output_file='output.json')
 ```
 
 ## 📋 Tipos de Entrada
@@ -227,10 +257,13 @@ result = EmailProcessingLibrary.generate(transformed, 'inline')
 - **text**: Texto separado por líneas
 
 ## 📋 Tipos de Salida
-- **csv**: Guardar en archivo CSV (predeterminado)
-- **json**: Guardar en archivo JSON
-- **inline**: Retornar/imprimir directamente
-- **silent**: Procesar sin salida (solo logs)
+
+| Tipo | Cuándo usar | Requiere archivo | Ejemplo |
+|------|-------------|------------------|----------|
+| **inline** | Ver resultados en pantalla | No | `--output-type inline` |
+| **csv** | Exportar a Excel/hojas cálculo | Sí | `--output-type csv --output result.csv` |
+| **json** | Integrar con APIs | Sí | `--output-type json --output result.json` |
+| **silent** | Solo validar (sin salida visible) | No | `--output-type silent` |
 
 ## 🔐 Seguridad
 
@@ -308,6 +341,38 @@ El script:
 - **[docs/PYPI_DEPLOYMENT.md](docs/PYPI_DEPLOYMENT.md)** - Documentación completa
 - **[PYPI_COMMANDS.md](PYPI_COMMANDS.md)** - Referencia rápida de comandos
 
+## 🐛 Errores Comunes
+
+### BR-001: Múltiples símbolos @ detectados
+**Causa:** El correo contiene más de un símbolo `@`  
+**Ejemplo:** `invalid@email@com`  
+**Solución:** Verificar que el correo tenga exactamente un `@`
+
+### BR-002: Falta punto separador en prefijo
+**Causa:** El correo no tiene formato `nombre.apellido`  
+**Ejemplo:** `user@domain.com`  
+**Solución:** Usar formato `juan.perez@domain.com`
+
+### BR-003: Nombre muy corto (mínimo 2 caracteres)
+**Causa:** El nombre tiene menos de 2 caracteres  
+**Ejemplo:** `j.perez@domain.com`  
+**Solución:** Usar nombres de al menos 2 caracteres: `juan.perez@domain.com`
+
+### BR-004: Apellido muy corto (mínimo 2 caracteres)
+**Causa:** El apellido tiene menos de 2 caracteres  
+**Ejemplo:** `juan.p@domain.com`  
+**Solución:** Usar apellidos de al menos 2 caracteres
+
+### BR-005: Solo se permiten letras
+**Causa:** El nombre o apellido contiene números o caracteres especiales  
+**Ejemplo:** `juan123.perez@domain.com`  
+**Solución:** Usar solo letras (a-z, A-Z, acentuadas)
+
+### ValueError: output_file required for json/csv
+**Causa:** Falta especificar archivo de salida para JSON o CSV  
+**Solución CLI:** Agregar `--output archivo.csv` o `--output archivo.json`  
+**Solución Librería:** `EmailProcessingLibrary.generate(data, 'csv', output_file='output.csv')`
+
 ## 🧪 Pruebas
 
 ```bash
@@ -315,7 +380,7 @@ El script:
 python test_api.py
 
 # Pruebas de CLI
-python main_cli.py --input-type list --input "test@example.com" --new-domain new.com --output-type inline
+python main_cli.py --input-type list --input "juan.perez@example.com" --new-domain new.com --output-type inline
 
 # Pruebas de librería
 python examples/library_example.py
@@ -333,6 +398,7 @@ python examples/library_example.py
 | **[Integración n8n](docs/N8N_INTEGRATION.md)** | Automatización con n8n | Automatización |
 | **[Publicación PyPI](docs/PYPI_DEPLOYMENT.md)** | Publicar paquete en PyPI | Mantenedores |
 | **[Comandos PyPI](PYPI_COMMANDS.md)** | Referencia rápida de comandos | Desarrolladores |
+| **[Generación de PDFs](docs/PDF_GENERATION.md)** | Convertir Markdown a PDF | Todos |
 
 ### 📋 Documentación de Procesos (PDD)
 

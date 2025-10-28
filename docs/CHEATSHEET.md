@@ -5,20 +5,23 @@
 ### CLI
 
 ```bash
-# Sintaxis básica
-python main_cli.py --input-type <TYPE> --input <DATA> --new-domain <DOMAIN> --output-type <TYPE> [--output <FILE>]
+# Sintaxis básica (PyPI)
+email-processor --input-type <TYPE> --input <DATA> --new-domain <DOMAIN> --output-type <TYPE> [--output <FILE>]
 
 # Archivo → CSV
-python main_cli.py --input-type file --input emails.txt --new-domain company.com --output-type csv --output result.csv
+email-processor --input-type file --input emails.txt --new-domain company.com --output-type csv --output result.csv
 
 # Lista → Inline
-python main_cli.py --input-type list --input "a@x.com,b@y.com" --new-domain new.com --output-type inline
+email-processor --input-type list --input "a@x.com,b@y.com" --new-domain new.com --output-type inline
 
 # Texto → JSON
-python main_cli.py --input-type text --input "a@x.com\nb@y.com" --new-domain new.com --output-type json --output result.json
+email-processor --input-type text --input "a@x.com\nb@y.com" --new-domain new.com --output-type json --output result.json
 
 # Modo silencioso
-python main_cli.py --input-type file --input emails.txt --new-domain company.com --output-type silent
+email-processor --input-type file --input emails.txt --new-domain company.com --output-type silent
+
+# Desde código fuente
+python main_cli.py --input-type file --input emails.txt --new-domain company.com --output-type csv --output result.csv
 ```
 
 ### API Local
@@ -373,6 +376,9 @@ juan123.perez@domain.com   # BR-005: Números no permitidos
 ### Ejecutar Tests
 
 ```bash
+# Test CLI (PyPI)
+email-processor --input-type list --input "test@example.com" --new-domain new.com --output-type inline
+
 # Tests de ejemplo
 python examples/tests/run_tests.py
 
@@ -397,6 +403,10 @@ logging.basicConfig(level=logging.DEBUG)
 ### Ver Stack Trace
 
 ```bash
+# PyPI
+email-processor ... 2>&1 | tee debug.log
+
+# Código fuente
 python main_cli.py ... 2>&1 | tee debug.log
 ```
 

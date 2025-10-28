@@ -52,14 +52,20 @@ Archivos de entrada de ejemplo para probar el procesador de correos electrónico
 ## 💡 Uso
 
 ```bash
+# Opción 1: Usando PyPI (recomendado)
+pip install email-processor-cli
+
 # Procesar archivo válido
-python main_cli.py --input-type file --input examples/file_examples/valid_emails.txt --new-domain new.com --output-type inline
+email-processor --input-type file --input examples/file_examples/valid_emails.txt --new-domain new.com --output-type inline
 
 # Procesar archivo con errores
-python main_cli.py --input-type file --input examples/file_examples/mixed_valid_invalid.txt --new-domain company.com --output-type csv
+email-processor --input-type file --input examples/file_examples/mixed_valid_invalid.txt --new-domain company.com --output-type csv
 
 # Procesar archivo con acentos
-python main_cli.py --input-type file --input examples/file_examples/accented_names.txt --new-domain nuevo.com --output-type inline
+email-processor --input-type file --input examples/file_examples/accented_names.txt --new-domain nuevo.com --output-type inline
+
+# Opción 2: Usando código fuente
+python main_cli.py --input-type file --input examples/file_examples/valid_emails.txt --new-domain new.com --output-type inline
 ```
 
 ## 📊 Resultados Esperados

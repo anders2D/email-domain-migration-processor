@@ -19,6 +19,7 @@ class EmailProcessingLibrary:
     _validator = RegexEmailValidator()
     _logger = PythonLogger("library")
     _service = EmailProcessingService(_validator, _logger)
+    _error_logger = None
     
     @staticmethod
     def extract(input_data: Union[str, List[str]], input_type: str = 'file') -> List[str]:
@@ -42,17 +43,23 @@ class EmailProcessingLibrary:
             raise ValueError(f"Invalid input_type: {input_type}")
     
     @classmethod
-    def transform(cls, emails: List[str], new_domain: str) -> List[dict]:
+    def transform(cls, emails: List[str], new_domain: str, enable_logging: bool = False) -> List[dict]:
         """
         Transform emails to new domain.
         
         Args:
             emails: List of email strings
             new_domain: New domain to apply
+            enable_logging: If True, generates error_log.txt
         
         Returns:
             List of dicts with 'original', 'transformed', 'valid' keys
         """
+        # Initialize error logger if enabled
+        if enable_logging:
+            from src.shared.error_logger import ErrorLogger
+            cls._error_logger = ErrorLogger()
+        
         # Use domain service
         result = cls._service.transform_emails(emails, new_domain)
         
@@ -65,16 +72,32 @@ class EmailProcessingLibrary:
             })
         
         for error in result['error_details']:
+            # Log error if enabled
+            if enable_logging and cls._error_logger:
+                error_msg = error['error']
+                if ':' in error_msg:
+                    parts = error_msg.split(':', 1)
+                    rule = parts[0].strip()
+                    description = parts[1].strip()
+                else:
+                    rule = 'UNKNOWN'
+                    description = error_msg
+                cls._error_logger.log_error(error['email'], rule, description)
+            
             transformed.append({
                 'original': error['email'],
                 'valid': False,
                 'error': error['error']
             })
         
+        # Save error log if enabled
+        if enable_logging and cls._error_logger:
+            cls._error_logger.save()
+        
         return transformed
     
     @staticmethod
-    def generate(transformed: List[dict], output_type: str = 'inline', output_file: str = None):
+    def generate(transformed: List[dict], output_type: str = 'inline', output_file: str = None, enable_summary: bool = False):
         """
         Generate output in different formats.
         
@@ -82,10 +105,26 @@ class EmailProcessingLibrary:
             transformed: List of transformed email dicts
             output_type: 'csv', 'json', 'inline', or 'silent'
             output_file: Output file path (required for csv/json)
+            enable_summary: If True, generates summary.txt
         
         Returns:
             Count of processed emails or list of emails (for inline)
         """
+        valid_count = sum(1 for t in transformed if t.get('valid'))
+        total_count = len(transformed)
+        
+        # Generate summary if enabled
+        if enable_summary:
+            from src.shared.summary_generator import SummaryGenerator
+            stats = {
+                'total': total_count,
+                'processed': valid_count,
+                'errors': total_count - valid_count,
+                'success_rate': (valid_count / total_count * 100) if total_count else 0,
+                'output_file': output_file or 'N/A',
+                'error_log': 'error_log.txt' if hasattr(EmailProcessingLibrary, '_error_logger') and EmailProcessingLibrary._error_logger else 'N/A'
+            }
+            SummaryGenerator.generate(stats)
         if output_type == 'csv':
             if not output_file:
                 raise ValueError("output_file required for csv")

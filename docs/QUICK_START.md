@@ -22,12 +22,21 @@ pip install flask requests
 ### 3. Probar CLI
 
 ```bash
-cd hiperautomatization
+# Opción 1: Instalar desde PyPI (recomendado)
+pip install email-processor-cli
 
 # Crear archivo de prueba
 echo "juan.perez@old.com" > test.txt
 
 # Ejecutar
+email-processor \
+  --input-type file \
+  --input test.txt \
+  --new-domain company.com \
+  --output-type inline
+
+# Opción 2: Desde código fuente
+cd hiperautomatization
 python main_cli.py \
   --input-type file \
   --input test.txt \
@@ -241,7 +250,7 @@ curl -X POST http://localhost:5000/transform \
 
 ```bash
 # Procesar un solo correo
-python main_cli.py \
+email-processor \
   --input-type list \
   --input "juan.perez@old.com" \
   --new-domain company.com \
@@ -341,7 +350,10 @@ print(f"Failed: {len(results['failed'])}")
 ### Ver logs detallados
 
 ```bash
-# CLI con logs
+# CLI con logs (PyPI)
+email-processor ... 2>&1 | tee execution.log
+
+# CLI con logs (código fuente)
 python main_cli.py ... 2>&1 | tee execution.log
 
 # API con logs
