@@ -25,9 +25,19 @@ venv/
 ENV/
 env/
 
+# Testing
+.coverage
+.coverage.*
+coverage.json
+htmlcov/
+.pytest_cache/
+.tox/
+.nox/
+
 # IDEs
 .vscode/
 .idea/
+.amazonq/
 *.swp
 *.swo
 *~
@@ -44,6 +54,7 @@ summary.txt
 expected_output.csv
 output.csv
 output.json
+temp/
 
 # Terraform
 terraform/.terraform/

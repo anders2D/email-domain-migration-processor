@@ -984,7 +984,7 @@ BR-001: Email must contain exactly one @
 - Exactamente un `@`
 - Exactamente un `.` antes del `@`
 - Nombre y apellido entre 2-50 caracteres
-- Solo letras (a-z, A-Z, acentos)
+- Solo letras (a-z, A-Z, SIN acentos)
 
 ### Logs de Debug
 

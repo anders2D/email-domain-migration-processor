@@ -5,7 +5,7 @@ from src.features.email_processing.domain.ports import EmailValidator
 
 class RegexEmailValidator(EmailValidator):
     def __init__(self):
-        self.name_pattern = re.compile(r'^[a-zA-ZáéíóúñüÁÉÍÓÚÑÜ]+$')
+        self.name_pattern = re.compile(r'^[a-zA-Z]+$')
         self.domain_pattern = re.compile(r'^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
     
     def is_valid(self, email: str) -> bool:
@@ -49,7 +49,7 @@ class RegexEmailValidator(EmailValidator):
         if len(apellido) > 50:
             raise ValueError(f"BR-004: Apellido muy largo (máximo 50 caracteres)")
         
-        # BR-005: Solo letras (incluyendo acentuadas)
+        # BR-005: Solo letras (sin acentos)
         if not self.name_pattern.match(nombre):
             # Detectar tipo de carácter inválido
             if any(c.isdigit() for c in nombre):

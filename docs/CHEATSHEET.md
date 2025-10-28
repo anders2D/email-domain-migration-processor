@@ -119,7 +119,7 @@ is_valid = EmailProcessingLibrary.validate("user@domain.com")
 | BR-002 | Exactamente un . antes de @ | `user.name@domain.com` | `username@domain.com` |
 | BR-003 | Nombre 2-50 caracteres | `juan.perez@x.com` | `a.perez@x.com` |
 | BR-004 | Apellido 2-50 caracteres | `juan.perez@x.com` | `juan.p@x.com` |
-| BR-005 | Solo letras (a-z, A-Z, acentos) | `josé.garcía@x.com` | `juan123.perez@x.com` |
+| BR-005 | Solo letras (a-z, A-Z, SIN acentos) | `juan.perez@x.com` | `juan123.perez@x.com` o `josé.garcía@x.com` |
 
 ### Transformation Rules (TR)
 

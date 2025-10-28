@@ -82,16 +82,16 @@
 
 | Tipo | Descripción | Formato | Contenido |
 |------|-------------|---------|----------|
-| Archivo CSV | Correos procesados exitosamente | expected_output.csv | Columnas: nombre, apellido, correo_original, correo_nuevo |
-| Log de errores | Correos rechazados con razón | error_log.txt | Formato: `[TIMESTAMP] ERROR: {correo} - {regla_fallida} - {descripción}` |
-| Reporte resumen | Estadísticas de ejecución | summary.txt | Total procesados, exitosos, rechazados, tiempo ejecución |
+| Archivo CSV | Correos procesados exitosamente | expected_output.csv | Columnas: Nombre, Apellido, Correo Original, Correo Nuevo |
+| Log de errores | Correos rechazados con razón del rechazo | error_log.txt | Fecha/hora, correo rechazado, motivo del rechazo en lenguaje natural |
+| Reporte resumen | Estadísticas de ejecución | summary.txt | Total procesados, exitosos, rechazados, tiempo de ejecución |
 
 **Entrega:** Correo electrónico o carga a carpeta compartida
 
 **Ejemplo log de errores:**
 ```
-[2025-10-27 10:30:45] ERROR: john@example.com - BR-002 - Falta punto separador en prefijo
-[2025-10-27 10:30:46] ERROR: maria.o'brien@example.com - BR-005 - Caracteres no permitidos (apóstrofe)
+27 de octubre 2025, 10:30 AM - No se pudo procesar john@example.com porque le falta el punto entre nombre y apellido
+27 de octubre 2025, 10:30 AM - No se pudo procesar maria.o'brien@example.com porque contiene un apóstrofe que no está permitido
 ```
 
 ### 1.5 Actores
@@ -142,13 +142,13 @@
 
 | # | Fase | Paso | Actor | Sistema | Duración | Resultado | Excepciones |
 |---|------|------|-------|---------|----------|-----------|-------------|
-| 1 | 📥 Recepción | Descargar archivo | Analista | Email/SharePoint | 1-2 min | Archivo TXT local | Archivo no encontrado, sin permisos |
-| 2 | 🔍 Revisión | Verificar formato | Analista | Notepad/VS Code | 2-3 min | Formato validado | Formato incorrecto, caracteres especiales |
-| 3 | ✂️ Extracción | Separar campos | Analista | Excel | 3-5 min | Nombre, Apellido, Dominio separados | Delimitadores incorrectos |
-| 4 | 📝 Normalización | Capitalizar nombres | Analista | Excel | 5-10 min | Nombres con formato correcto | Nombres compuestos, errores ortográficos |
-| 5 | 🔗 Generación | Concatenar correo | Analista | Excel | 3-5 min | Nuevos correos generados | Errores de concatenación |
-| 6 | ✔️ Validación | Revisar resultados | Analista | Excel | 5-10 min | Datos validados y corregidos | Duplicados, datos faltantes |
-| 7 | 📤 Entrega | Enviar CSV | Analista | Email/SharePoint | 2-3 min | expected_output.csv entregado | Error al guardar, problemas de red |
+| 1 | Recepción | Descargar archivo | Analista | Email/SharePoint | 1-2 min | Archivo TXT local | Archivo no encontrado, sin permisos |
+| 2 | Revisión | Verificar formato | Analista | Editor de texto | 2-3 min | Formato validado | Formato incorrecto, caracteres especiales |
+| 3 | Extracción | Separar campos | Analista | Excel | 3-5 min | Nombre, Apellido, Dominio separados | Delimitadores incorrectos |
+| 4 | Normalización | Capitalizar nombres | Analista | Excel | 5-10 min | Nombres con formato correcto | Nombres compuestos, errores ortográficos |
+| 5 | Generación | Concatenar correo | Analista | Excel | 3-5 min | Nuevos correos generados | Errores de concatenación |
+| 6 | Validación | Revisar resultados | Analista | Excel | 5-10 min | Datos validados y corregidos | Duplicados, datos faltantes |
+| 7 | Entrega | Enviar CSV | Analista | Email/SharePoint | 2-3 min | expected_output.csv entregado | Error al guardar, problemas de red |
 
 **Tiempo total estimado:** 22-43 minutos (tiempo base sin correcciones)
 
@@ -162,59 +162,59 @@
 
 | ID | Tipo | Regla | Descripción | Acción si Falla |
 |----|------|-------|-------------|------------------|
-| BR-001 | 🔍 Estructura | Exactamente un @ | El correo debe contener un único símbolo @ | ❌ Registrar y omitir |
-| BR-002 | 🔍 Estructura | Exactamente un punto en prefijo | La parte antes del @ debe tener un único punto separador | ❌ Registrar y omitir |
-| BR-003 | 📏 Longitud | Nombre 2-50 caracteres | El nombre debe tener entre 2 y 50 caracteres | ❌ Registrar y omitir |
-| BR-004 | 📏 Longitud | Apellido 2-50 caracteres | El apellido debe tener entre 2 y 50 caracteres | ❌ Registrar y omitir |
-| BR-005 | 🔤 Caracteres | Solo letras | Nombre y apellido solo pueden contener letras (incluyendo á, é, í, ó, ú, ñ, ü) | ❌ Registrar y omitir |
+| BR-001 | Estructura | Exactamente un @ | El correo debe contener un único símbolo @ | Registrar y omitir |
+| BR-002 | Estructura | Exactamente un punto en prefijo | La parte antes del @ debe tener un único punto separador | Registrar y omitir |
+| BR-003 | Longitud | Nombre 2-50 caracteres | El nombre debe tener entre 2 y 50 caracteres | Registrar y omitir |
+| BR-004 | Longitud | Apellido 2-50 caracteres | El apellido debe tener entre 2 y 50 caracteres | Registrar y omitir |
+| BR-005 | Caracteres | Solo letras | Nombre y apellido solo pueden contener letras (a-z, A-Z, sin acentos) | Registrar y omitir |
 
-**Nota:** Todas las validaciones se ejecutan en secuencia. Si alguna falla, el correo se registra en el log de errores y se omite del procesamiento.
+**Nota:** Todas las validaciones se aplican a cada correo. Si alguna no se cumple, el correo se registra en el archivo de errores con la razón del rechazo y no se procesa.
 
 ### 3.2 Transformación
 
 | ID | Tipo | Regla | Ejemplo Entrada | Ejemplo Salida |
 |----|------|-------|-----------------|----------------|
-| TR-001 | 📝 Formato | Capitalizar nombre | juan | Juan |
-| TR-002 | 📝 Formato | Capitalizar apellido | perez | Perez |
-| TR-003 | 📝 Formato | Minúsculas en correo | Juan.Perez@NUEVO.COM | juan.perez@nuevo.com |
-| TR-004 | 💾 Preservación | Preservar dominio original | juan.perez@example.com | @example.com |
-| TR-005 | 🔗 Generación | Aplicar nuevo dominio | Juan + Perez + @nuevo.com | juan.perez@nuevo.com |
+| TR-001 | Formato | Capitalizar nombre | juan | Juan |
+| TR-002 | Formato | Capitalizar apellido | perez | Perez |
+| TR-003 | Formato | Minúsculas en correo | Juan.Perez@NUEVO.COM | juan.perez@nuevo.com |
+| TR-004 | Preservación | Preservar dominio original | juan.perez@example.com | @example.com |
+| TR-005 | Generación | Aplicar nuevo dominio | Juan + Perez + @nuevo.com | juan.perez@nuevo.com |
 
-**Nota:** Las transformaciones se aplican solo a correos que pasaron todas las validaciones.
+**Nota:** Las transformaciones se aplican solo a correos que cumplieron todas las validaciones.
 
 ### 3.3 Casos Especiales
 
 | Caso | Ejemplo | Comportamiento Esperado | Regla Aplicada |
 |------|---------|-------------------------|----------------|
-| Nombres con apóstrofe | o'brien@example.com | ❌ Rechazar | BR-005 (solo letras) |
-| Nombres con guión | maria-jose@example.com | ❌ Rechazar | BR-005 (solo letras) |
-| Nombres compuestos (múltiples puntos) | maria.del.carmen@example.com | ❌ Rechazar | BR-002 (exactamente un punto) |
-| Prefijo sin punto | admin@example.com | ❌ Rechazar | BR-002 (exactamente un punto) |
-| Múltiples @ | user@@example.com | ❌ Rechazar | BR-001 (exactamente un @) |
-| Caracteres acentuados | josé.garcía@example.com | ✅ Permitir | BR-005 (incluye á, é, í, ó, ú, ñ, ü) |
-| Nombres muy cortos | a.b@example.com | ❌ Rechazar | BR-003/BR-004 (mínimo 2 caracteres) |
-| Nombres muy largos | {nombre > 50 caracteres} | ❌ Rechazar | BR-003/BR-004 (máximo 50 caracteres) |
-| Correos duplicados | juan.perez@example.com (2 veces) | ⚠️ Procesar una vez, alertar en log | Validación adicional |
-| Archivo vacío | 0 correos en archivo | ⚠️ Generar CSV vacío, alertar en log | Validación adicional |
-| Líneas vacías | Saltos de línea extra | ✅ Ignorar líneas vacías | Validación adicional |
-| Espacios en blanco | " juan.perez@example.com " | ✅ Eliminar espacios antes/después | Validación adicional |
-| Mayúsculas en dominio | juan.perez@EXAMPLE.COM | ✅ Convertir a minúsculas | TR-003 |
-| Prefijos numéricos | juan.123@example.com | ❌ Rechazar | BR-005 (solo letras en apellido) |
+| Nombres con apóstrofe | o'brien@example.com | Rechazar | BR-005 (solo letras) |
+| Nombres con guión | maria-jose@example.com | Rechazar | BR-005 (solo letras) |
+| Nombres compuestos (múltiples puntos) | maria.del.carmen@example.com | Rechazar | BR-002 (exactamente un punto) |
+| Prefijo sin punto | admin@example.com | Rechazar | BR-002 (exactamente un punto) |
+| Múltiples @ | user@@example.com | Rechazar | BR-001 (exactamente un @) |
+| Caracteres acentuados | josé.garcía@example.com | Rechazar | BR-005 (solo a-z, A-Z sin acentos) |
+| Nombres muy cortos | a.b@example.com | Rechazar | BR-003/BR-004 (mínimo 2 caracteres) |
+| Nombres muy largos | {nombre > 50 caracteres} | Rechazar | BR-003/BR-004 (máximo 50 caracteres) |
+| Correos duplicados | juan.perez@example.com (2 veces) | Procesar una vez, alertar | Validación adicional |
+| Archivo vacío | 0 correos en archivo | Generar CSV vacío, alertar | Validación adicional |
+| Líneas vacías | Saltos de línea extra | Ignorar líneas vacías | Validación adicional |
+| Espacios en blanco | " juan.perez@example.com " | Eliminar espacios antes/después | Validación adicional |
+| Mayúsculas en dominio | juan.perez@EXAMPLE.COM | Convertir a minúsculas | TR-003 |
+| Prefijos numéricos | juan.123@example.com | Rechazar | BR-005 (solo letras en apellido) |
 
 **Leyenda:**
-- ✅ Permitir: El correo se procesa normalmente
-- ❌ Rechazar: El correo se registra en error_log.txt y se omite
-- ⚠️ Alertar: Se procesa pero se genera advertencia en log
+- **Permitir:** El correo se procesa normalmente
+- **Rechazar:** El correo se registra en error_log.txt y se omite
+- **Alertar:** Se procesa pero se genera advertencia en log
 
 ### 3.4 Dependencias
 
 | Tipo | Proceso | Descripción |
 |------|---------|---------------|
-| ⬆️ Upstream | Extracción HR | Sistema de recursos humanos genera listado de empleados |
-| ⬆️ Upstream | Aprobación cambio dominio | Área de TI aprueba migración de dominio |
-| ⬇️ Downstream | Importación servidor correo | Administrador importa CSV al servidor de correo |
-| ⬇️ Downstream | Notificación usuarios | Comunicación informa a usuarios sobre cambio |
-| ⬇️ Downstream | Actualización AD | TI actualiza cuentas en Active Directory |
+| Upstream | Extracción HR | Sistema de recursos humanos genera listado de empleados |
+| Upstream | Aprobación cambio dominio | Área de TI aprueba migración de dominio |
+| Downstream | Importación servidor correo | Administrador importa CSV al servidor de correo |
+| Downstream | Notificación usuarios | Comunicación informa a usuarios sobre cambio |
+| Downstream | Actualización AD | TI actualiza cuentas en Active Directory |
 
 ---
 
@@ -226,29 +226,29 @@
 
 | # | Paso | Estado | Justificación | Complejidad |
 |---|------|--------|---------------|-------------|
-| 1 | 📥 Recepción | 🟩 Automatizable | Lectura de archivos es tarea repetitiva y estructurada | 🟢 Baja |
-| 2 | 🔍 Revisión | 🟩 Automatizable | Validación de formato sigue reglas definidas (BR-001 a BR-005) | 🟢 Baja |
-| 3 | ✂️ Extracción | 🟩 Automatizable | Separación de campos con delimitadores fijos (. y @) | 🟢 Baja |
-| 4 | 📝 Normalización | 🟩 Automatizable | Capitalización es función estándar de texto | 🟢 Baja |
-| 5 | 🔗 Generación | 🟩 Automatizable | Concatenación sigue patrón fijo: nombre.apellido@dominio | 🟢 Baja |
-| 6 | ✔️ Validación | 🟩 Automatizable | Verificación de duplicados y vacíos es lógica simple | 🟢 Baja |
-| 7 | 📤 Entrega | 🟩 Automatizable | Guardado de CSV y envío por API/email es estándar | 🟢 Baja |
+| 1 | Recepción | Automatizable | Lectura de archivos es tarea repetitiva y estructurada | Baja |
+| 2 | Revisión | Automatizable | Validación de formato sigue reglas definidas (BR-001 a BR-005) | Baja |
+| 3 | Extracción | Automatizable | Separación de campos con delimitadores fijos (. y @) | Baja |
+| 4 | Normalización | Automatizable | Capitalización es función estándar de texto | Baja |
+| 5 | Generación | Automatizable | Concatenación sigue patrón fijo: nombre.apellido@dominio | Baja |
+| 6 | Validación | Automatizable | Verificación de duplicados y vacíos es lógica simple | Baja |
+| 7 | Entrega | Automatizable | Guardado de CSV y envío por API/email es estándar | Baja |
 
 **Leyenda de complejidad:**
-- 🟢 Baja: Implementación directa, sin lógica compleja
-- 🟡 Media: Requiere manejo de excepciones o integraciones
-- 🔴 Alta: Requiere IA, ML o lógica de negocio compleja
+- **Baja:** Implementación directa, sin lógica compleja
+- **Media:** Requiere manejo de excepciones o integraciones
+- **Alta:** Requiere IA, ML o lógica de negocio compleja
 
 #### Resumen de Automatización
 
 | Métrica | Valor Actual (Manual) | Valor Esperado (Automatizado) | Mejora |
 |---------|----------------------|-------------------------------|--------|
-| 🟩 Pasos automatizables | 0/7 (0%) | 7/7 (100%) | +100% |
-| 🟥 Pasos manuales | 7/7 (100%) | 0/7 (0%) | -100% |
-| ⏱️ Tiempo de ejecución | 30-45 min | 3-5 min | -85% |
-| ❌ Tasa de error | 5-10% | <1% | -90% |
-| 📈 Capacidad diária | 1,000 correos | 10,000+ correos | +900% |
-| 📊 Trazabilidad | 0% (manual) | 100% (logs) | +100% |
+| Pasos automatizables | 0/7 (0%) | 7/7 (100%) | +100% |
+| Pasos manuales | 7/7 (100%) | 0/7 (0%) | -100% |
+| Tiempo de ejecución | 30-45 min | 3-5 min | -85% |
+| Tasa de error | 5-10% | <1% | -90% |
+| Capacidad diária | 1,000 correos | 10,000+ correos | +900% |
+| Trazabilidad | 0% (manual) | 100% (logs) | +100% |
 
 ### 4.2 Heatmap de Automatización
 
@@ -258,13 +258,13 @@
 
 | Paso | Actividad Manual Actual | Capacidad Automatizada Requerida | Beneficio Esperado |
 |------|-------------------------|-----------------------------------|--------------------|
-| 📥 Recepción | Descarga manual desde Email/SharePoint | Integración automática con sistemas de origen | Elimina descarga manual, reduce tiempo de inicio |
-| 🔍 Revisión | Revisión visual en editor de texto | Motor de validación con reglas de negocio | Elimina errores humanos, validación consistente |
-| ✂️ Extracción | Separación manual en Excel | Procesador de texto con análisis de estructura | Procesamiento rápido y sin errores |
-| 📝 Normalización | Aplicación manual de fórmulas | Motor de transformación de texto | Consistencia 100%, sin variaciones |
-| 🔗 Generación | Concatenación manual en Excel | Generador automático con plantillas | Formato estandarizado, sin errores de tipeo |
-| ✔️ Validación | Revisión visual fila por fila | Motor de validación con reglas de negocio | Validación exhaustiva, detección de duplicados |
-| 📤 Entrega | Envío manual por correo/carga a carpeta | Integración automática con sistemas destino | Entrega instantánea, trazabilidad completa |
+| Recepción | Descarga manual desde Email/SharePoint | Integración automática con sistemas de origen | Elimina descarga manual, reduce tiempo de inicio |
+| Revisión | Revisión visual en editor de texto | Motor de validación con reglas de negocio | Elimina errores humanos, validación consistente |
+| Extracción | Separación manual en Excel | Procesador de texto con análisis de estructura | Procesamiento rápido y sin errores |
+| Normalización | Aplicación manual de fórmulas | Motor de transformación de texto | Consistencia 100%, sin variaciones |
+| Generación | Concatenación manual en Excel | Generador automático con plantillas | Formato estandarizado, sin errores de tipeo |
+| Validación | Revisión visual fila por fila | Motor de validación con reglas de negocio | Validación exhaustiva, detección de duplicados |
+| Entrega | Envío manual por correo/carga a carpeta | Integración automática con sistemas destino | Entrega instantánea, trazabilidad completa |
 
 **Capacidades transversales requeridas:**
 - **Registro de auditoría:** Cada operación debe quedar registrada con timestamp y resultado
@@ -276,17 +276,16 @@
 
 | Componente | Razón de Exclusión | Tipo | Responsable |
 |------------|----------------------|------|-------------|
-| 🚫 Aprobación migración | Decisión estratégica de negocio | 👤 Manual | Dueño de Negocio |
-| 🚫 Validación dominio destino | Verificación administrativa y legal | 👤 Manual | Área de TI |
-| 🚫 Resolución conflictos | Requiere criterio y contexto humano | 👤 Manual | Analista |
-| 🚫 Migración real servidores | Proceso separado con sus propios controles | 🔗 Otro proceso | Administrador Sistemas |
-| 🚫 Notificaciones usuarios | Comunicación corporativa formal | 👤 Manual | Área de Comunicación |
-| 🚫 Backup y recuperación | Responsabilidad de infraestructura | 🔗 Otro proceso | Operaciones TI |
+| Aprobación migración | Decisión estratégica de negocio | Manual | Dueño de Negocio |
+| Validación dominio destino | Verificación administrativa y legal | Manual | Área de TI |
+| Resolución conflictos | Requiere criterio y contexto humano | Manual | Analista |
+| Migración real servidores | Proceso separado con sus propios controles | Otro proceso | Administrador Sistemas |
+| Notificaciones usuarios | Comunicación corporativa formal | Manual | Área de Comunicación |
+| Backup y recuperación | Responsabilidad de infraestructura | Otro proceso | Operaciones TI |
 
 **Leyenda:**
-- 👤 Manual: Requiere intervención humana
-- 🔗 Otro proceso: Fuera del alcance, gestionado por otro flujo
-- 🚫 Excluido: No forma parte de este proceso
+- **Manual:** Requiere intervención humana
+- **Otro proceso:** Fuera del alcance, gestionado por otro flujo
 
 ### 4.5 Restricciones del Proceso Actual (AS-IS)
 
@@ -324,7 +323,7 @@ El proceso TO-BE elimina todas las tareas manuales mediante un sistema automatiz
 
 ### 5.2 Comparativa AS-IS vs TO-BE
 
-| Aspecto | 🔴 AS-IS (Manual) | 🟢 TO-BE (Automatizado) | 📈 Mejora |
+| Aspecto | AS-IS (Manual) | TO-BE (Automatizado) | Mejora |
 |---------|-------------------|------------------------|----------|
 | **Ejecución** | Manual en Excel | Automatizada | -85% tiempo |
 | **Validación** | Visual, propensa a errores | Reglas automáticas (BR-001 a BR-005) | -90% errores |
@@ -333,33 +332,33 @@ El proceso TO-BE elimina todas las tareas manuales mediante un sistema automatiz
 | **Disponibilidad** | Horario laboral | 24/7 | 3x disponibilidad |
 | **Costo operativo** | Alto (tiempo analista) | Bajo (infraestructura) | -70% costo |
 
-### 5.3 Plan de Transición (4 meses)
+### 5.3 Plan de Transición (1 mes)
 
 ![Roadmap de Transición](diagrams/roadmap-transicion.svg)
 
 #### Detalle por Fase
 
-**🟦 Fase 1: Desarrollo (Mes 1)**
+**Semana 1: Desarrollo (Días 1-7)**
 - Desarrollo de solución automatizada básica
 - Implementación de reglas de negocio (BR-001 a BR-005, TR-001 a TR-005)
 - Validación funcional con casos de prueba
 - **Entregable:** Prototipo funcional
 
-**🟨 Fase 2: Pruebas (Mes 2)**
+**Semana 2: Pruebas (Días 8-14)**
 - Pruebas piloto con casos reales (100-500 correos)
 - Identificación y corrección de errores
 - Ajustes según feedback de usuarios
 - Pruebas de carga y rendimiento
 - **Entregable:** Solución validada y ajustada
 
-**🟩 Fase 3: Capacitación (Mes 3)**
+**Semana 3: Capacitación (Días 15-21)**
 - Capacitación a usuarios finales
 - Creación de documentación técnica y de usuario
 - Migración gradual (20% → 50% → 100%)
 - Soporte paralelo (manual + automatizado)
 - **Entregable:** Usuarios capacitados y documentación completa
 
-**🟦 Fase 4: Producción (Mes 4)**
+**Semana 4: Producción (Días 22-30)**
 - Puesta en producción al 100%
 - Monitoreo continuo de métricas
 - Soporte post-implementación
@@ -370,10 +369,10 @@ El proceso TO-BE elimina todas las tareas manuales mediante un sistema automatiz
 
 | Fase | Criterio | Meta |
 |------|----------|------|
-| Fase 1 | Funcionalidad básica | 100% reglas implementadas |
-| Fase 2 | Tasa de éxito | >95% correos procesados correctamente |
-| Fase 3 | Adopción | 100% usuarios capacitados |
-| Fase 4 | Estabilidad | <1% tasa de error en producción |
+| Semana 1 | Funcionalidad básica | 100% reglas implementadas |
+| Semana 2 | Tasa de éxito | >95% correos procesados correctamente |
+| Semana 3 | Adopción | 100% usuarios capacitados |
+| Semana 4 | Estabilidad | <1% tasa de error en producción |
 
 ---
 
@@ -399,56 +398,56 @@ El proceso TO-BE elimina todas las tareas manuales mediante un sistema automatiz
 
 | Riesgo | Probabilidad | Impacto | Nivel | Mitigación Propuesta |
 |--------|--------------|---------|-------|-------------------------|
-| 📄 Archivo corrupto | 🟡 Media | 🔴 Alto | 🟨 Medio | Validación previa con try-catch, logs detallados |
-| 💾 Pérdida datos | 🟢 Baja | 🔴 Crítico | 🟧 Alto | Logs completos, backup automático, sin borrado de origen |
-| ❌ Datos incorrectos | 🟡 Media | 🔴 Alto | 🟨 Medio | Validación estricta (BR-001 a BR-005), reporte de errores |
-| 🚫 Acceso no autorizado | 🟢 Baja | 🔴 Alto | 🟧 Alto | Implementar autenticación y control de acceso |
-| 🔒 Exposición de PII | 🟡 Media | 🔴 Alto | 🟨 Medio | Sin persistencia, logs sanitizados, encriptación en tránsito |
-| ⚡ Fallo infraestructura | 🟢 Baja | 🔴 Alto | 🟧 Alto | Reintentos automáticos, monitoreo, alertas |
+| Archivo corrupto | Media | Alto | Medio | Validación previa del archivo, registro detallado de errores |
+| Pérdida datos | Baja | Crítico | Alto | Registro completo de operaciones, respaldo automático, conservar archivo original |
+| Datos incorrectos | Media | Alto | Medio | Validación estricta (BR-001 a BR-005), reporte de errores |
+| Acceso no autorizado | Baja | Alto | Alto | Implementar autenticación y control de acceso |
+| Exposición de PII | Media | Alto | Medio | Sin almacenamiento permanente, registros sin datos sensibles, protección durante transferencia |
+| Fallo infraestructura | Baja | Alto | Alto | Reintentos automáticos, supervisión continua, notificaciones de fallo |
 
 **Leyenda de probabilidad:**
-- 🟢 Baja: <20% de ocurrencia
-- 🟡 Media: 20-60% de ocurrencia
-- 🔴 Alta: >60% de ocurrencia
+- **Baja:** <20% de ocurrencia
+- **Media:** 20-60% de ocurrencia
+- **Alta:** >60% de ocurrencia
 
 **Leyenda de impacto:**
-- 🟢 Bajo: Sin impacto significativo en operaciones
-- 🟡 Medio: Impacto moderado, recuperable
-- 🔴 Alto: Impacto severo en operaciones
-- ⚫ Crítico: Pérdida de datos o incumplimiento legal
+- **Bajo:** Sin impacto significativo en operaciones
+- **Medio:** Impacto moderado, recuperable
+- **Alto:** Impacto severo en operaciones
+- **Crítico:** Pérdida de datos o incumplimiento legal
 
 ### 6.3 Cumplimiento Normativo
 
 | Normativa | Requisito | Estado Propuesto | Acción Requerida | Prioridad |
 |-----------|-----------|------------------|-------------------|----------|
-| 🇪🇺 **GDPR/LOPD** | Protección datos personales | Sin almacenamiento permanente | Limitar retención logs a 90 días | 🟡 Media |
-| 🇪🇺 **GDPR/LOPD** | Derecho al olvido | Datos no persistidos | Cumple por diseño | 🟢 Baja |
-| 📊 **SOX** | Trazabilidad de operaciones | Logs completos con timestamps | Cumple por diseño | 🟢 Baja |
-| 🔒 **ISO 27001** | Control de acceso | Requiere implementación | Implementar autenticación y roles | 🔴 Alta |
-| 🔒 **ISO 27001** | Encriptación de datos | Solo en tránsito | Encriptar logs sensibles | 🟡 Media |
-| 📝 **Auditoría interna** | Registros de cambios | Logs automáticos | Cumple por diseño | 🟢 Baja |
+| **GDPR/LOPD** | Protección datos personales | Sin almacenamiento permanente | Limitar retención de registros a 90 días | Media |
+| **GDPR/LOPD** | Derecho al olvido | Datos no persistidos | Cumple por diseño | Baja |
+| **SOX** | Trazabilidad de operaciones | Registros completos con fecha y hora | Cumple por diseño | Baja |
+| **ISO 27001** | Control de acceso | Requiere implementación | Implementar autenticación y roles | Alta |
+| **ISO 27001** | Encriptación de datos | Solo durante transferencia | Proteger registros con datos sensibles | Media |
+| **Auditoría interna** | Registros de cambios | Logs automáticos | Cumple por diseño | Baja |
 
 **Leyenda de prioridad:**
-- 🔴 Alta: Implementar antes de producción
-- 🟡 Media: Implementar en primeros 2 meses
-- 🟢 Baja: Mejora continua
+- **Alta:** Implementar antes de producción
+- **Media:** Implementar en primeros 2 meses
+- **Baja:** Mejora continua
 
 ### 6.4 Riesgos de Seguridad
 
 | Amenaza | Descripción | Impacto | Mitigación Propuesta |
 |---------|-------------|---------|----------------------|
-| 🔓 **Exposición datos personales** | Correos contienen PII (nombres, emails) | 🔴 Alto | Sin persistencia, logs sanitizados, encriptar logs, anonimizar reportes |
-| 🚪 **Acceso no autorizado** | Sin control de quién ejecuta el proceso | 🔴 Alto | Autenticación (OAuth/LDAP), control de roles |
-| 💩 **Inyección de código** | Entrada maliciosa en archivos | 🟡 Medio | Validación estricta de formato, sanitización de entrada, whitelist de caracteres |
-| 🔍 **Fuga de información** | Logs con datos sensibles | 🟡 Medio | Logs centralizados con acceso restringido |
-| 🛡️ **Denegación de servicio** | Archivos muy grandes bloquean proceso | 🟢 Bajo | Timeout, límite de tamaño de archivo (10MB), rate limiting |
-| 🔧 **Manipulación de datos** | Modificación de archivo durante proceso | 🟢 Bajo | Lectura única, checksum/hash de archivo, validación de integridad |
+| **Exposición datos personales** | Correos contienen información personal (nombres, emails) | Alto | Sin almacenamiento permanente, registros sin datos sensibles, proteger registros, anonimizar reportes |
+| **Acceso no autorizado** | Sin control de quién ejecuta el proceso | Alto | Verificación de identidad, control de permisos por rol |
+| **Inyección de código** | Entrada maliciosa en archivos | Medio | Validación estricta de formato, limpieza de entrada, lista de caracteres permitidos |
+| **Fuga de información** | Registros con datos sensibles | Medio | Registros centralizados con acceso restringido |
+| **Denegación de servicio** | Archivos muy grandes bloquean proceso | Bajo | Tiempo máximo de espera, límite de tamaño de archivo (10MB), límite de solicitudes |
+| **Manipulación de datos** | Modificación de archivo durante proceso | Bajo | Lectura única, verificación de integridad del archivo |
 
 **Recomendaciones de seguridad prioritarias:**
-1. 🔴 **Urgente:** Implementar autenticación y control de acceso
-2. 🟡 **Importante:** Encriptar logs con datos sensibles
-3. 🟡 **Importante:** Centralizar logs con acceso restringido
-4. 🟢 **Deseable:** Implementar checksum para validación de integridad
+1. **Urgente:** Implementar verificación de identidad y control de acceso
+2. **Importante:** Proteger registros con datos sensibles
+3. **Importante:** Centralizar registros con acceso restringido
+4. **Deseable:** Implementar verificación de integridad de archivos
 
 ---
 
@@ -459,7 +458,7 @@ El proceso TO-BE elimina todas las tareas manuales mediante un sistema automatiz
 | Herramienta | Uso |
 |-------------|-----|
 | Microsoft Excel | Separación de campos, fórmulas, concatenación |
-| Bloc de Notas / VS Code | Revisión inicial de formato |
+| Editor de texto | Revisión inicial de formato |
 | Correo corporativo | Recepción y envío de archivos |
 | Carpeta compartida | SharePoint o red local para transferencia |
 
@@ -511,10 +510,10 @@ Maria,Garcia,maria.garcia@old.com,maria.garcia@new.com
 
 | Fecha | Sesión | Participantes | Temas Revisados | Feedback Recibido | Estado |
 |-------|---------|---------------|-----------------|-------------------|--------|
-| 2025-10-20 | Kick-off | Analista, SME, Negocio | Alcance inicial, proceso AS-IS | Validar métricas actuales | ✅ Incorporado |
-| 2025-10-22 | Revisión técnica | Analista, Líder Técnico | Reglas de negocio, casos especiales | Agregar validación de duplicados | ✅ Incorporado |
-| 2025-10-25 | Revisión seguridad | Analista, InfoSec, DPO | Riesgos de seguridad, cumplimiento | Encriptar logs, limitar retención | ✅ Incorporado |
-| 2025-10-27 | Aprobación final | Todos los stakeholders | Documento completo | Aprobado para desarrollo | ✅ Aprobado |
+| 2025-10-20 | Kick-off | Analista, SME, Negocio | Alcance inicial, proceso AS-IS | Validar métricas actuales | Incorporado |
+| 2025-10-22 | Revisión técnica | Analista, Líder Técnico | Reglas de negocio, casos especiales | Agregar validación de duplicados | Incorporado |
+| 2025-10-25 | Revisión seguridad | Analista, InfoSec, DPO | Riesgos de seguridad, cumplimiento | Encriptar logs, limitar retención | Incorporado |
+| 2025-10-27 | Aprobación final | Todos los stakeholders | Documento completo | Aprobado para desarrollo | Aprobado |
 
 ### 9.2 Cambios Principales
 
@@ -529,17 +528,17 @@ Maria,Garcia,maria.garcia@old.com,maria.garcia@new.com
 
 | Stakeholder | Criterio de Aceptación | Estado |
 |-------------|--------------------------|--------|
-| Usuario Funcional (SME) | Proceso AS-IS refleja realidad actual | ✅ Aprobado |
-| Área Solicitante | Salidas cumplen necesidades del negocio | ✅ Aprobado |
-| Líder Técnico | Reglas de negocio son implementables | ✅ Aprobado |
-| Oficial de Seguridad | Controles de seguridad son adecuados | ✅ Aprobado |
-| Oficial de Cumplimiento | Cumple normativas GDPR/LOPD/ISO 27001 | ✅ Aprobado |
-| Dueño de Negocio | ROI justifica inversión en automatización | ✅ Aprobado |
+| Usuario Funcional (SME) | Proceso AS-IS refleja realidad actual | Aprobado |
+| Área Solicitante | Salidas cumplen necesidades del negocio | Aprobado |
+| Líder Técnico | Reglas de negocio son implementables | Aprobado |
+| Oficial de Seguridad | Controles de seguridad son adecuados | Aprobado |
+| Oficial de Cumplimiento | Cumple normativas GDPR/LOPD/ISO 27001 | Aprobado |
+| Dueño de Negocio | ROI justifica inversión en automatización | Aprobado |
 
 **Leyenda:**
-- ✅ Aprobado: Stakeholder ha validado y aprobado
-- ⏳ Pendiente validación: Requiere revisión y aprobación
-- ❌ Rechazado: Requiere cambios antes de aprobar
+- **Aprobado:** Stakeholder ha validado y aprobado
+- **Pendiente validación:** Requiere revisión y aprobación
+- **Rechazado:** Requiere cambios antes de aprobar
 
 ---
 

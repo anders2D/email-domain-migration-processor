@@ -9,12 +9,12 @@ def main():
     parser.add_argument('--input-type', choices=['file', 'list', 'text'], default='file', help='Input type')
     parser.add_argument('--input', required=True, help='Input data')
     parser.add_argument('--new-domain', required=True, help='New domain for emails')
-    parser.add_argument('--output-type', choices=['csv', 'json', 'inline', 'silent'], default='csv', help='Output type')
+    parser.add_argument('--output-type', choices=['csv', 'json', 'excel', 'txt', 'inline', 'silent'], default='csv', help='Output type')
     parser.add_argument('--output', help='Output file (required for csv/json)')
     
     args = parser.parse_args()
     
-    if args.output_type in ['csv', 'json'] and not args.output:
+    if args.output_type in ['csv', 'json', 'excel', 'txt'] and not args.output:
         parser.error(f"--output required for {args.output_type}")
     
     config = {

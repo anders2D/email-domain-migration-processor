@@ -10,7 +10,6 @@ Archivos de entrada de ejemplo para probar el procesador de correos electrónico
 |---------|-------------|-----------------|
 | `valid_emails.txt` | Correos completamente válidos | BR-001 a BR-005 ✓ |
 | `mixed_case.txt` | Correos válidos con diferentes capitalizaciones | TR-001, TR-002, TR-003 |
-| `accented_names.txt` | Nombres con acentos (válidos) | BR-005 (letras acentuadas) |
 | `sample_emails.txt` | Dataset completo de 60 correos válidos | Todas las reglas ✓ |
 
 ### ❌ Casos Inválidos
@@ -21,6 +20,7 @@ Archivos de entrada de ejemplo para probar el procesador de correos electrónico
 | `invalid_dots.txt` | Sin punto o múltiples puntos en prefijo | BR-002 ✗ |
 | `invalid_length.txt` | Nombres muy cortos (<2) o muy largos (>50) | BR-003, BR-004 ✗ |
 | `invalid_characters.txt` | Números, guiones, símbolos especiales | BR-005 ✗ |
+| `accented_names.txt` | Nombres con acentos (INVÁLIDOS) | BR-005 ✗ |
 
 ### 🔀 Casos Mixtos
 
@@ -37,7 +37,7 @@ Archivos de entrada de ejemplo para probar el procesador de correos electrónico
 | BR-002 | Exactamente un punto en prefijo | `prefix.count('.') == 1` |
 | BR-003 | Nombre 2-50 caracteres | `2 ≤ len(nombre) ≤ 50` |
 | BR-004 | Apellido 2-50 caracteres | `2 ≤ len(apellido) ≤ 50` |
-| BR-005 | Solo letras (a-z, A-Z, acentuadas) | `nombre.isalpha()` |
+| BR-005 | Solo letras (a-z, A-Z, SIN acentos) | `^[a-zA-Z]+$` |
 
 ## 🔄 Reglas de Transformación (TR)
 
@@ -61,8 +61,8 @@ email-processor --input-type file --input examples/file_examples/valid_emails.tx
 # Procesar archivo con errores
 email-processor --input-type file --input examples/file_examples/mixed_valid_invalid.txt --new-domain company.com --output-type csv
 
-# Procesar archivo con acentos
-email-processor --input-type file --input examples/file_examples/accented_names.txt --new-domain nuevo.com --output-type inline
+# Procesar archivo con acentos (todos serán rechazados por BR-005)
+email-processor --input-type file --input examples/file_examples/accented_names.txt --new-domain nuevo.com --output-type csv --output result.csv
 
 # Opción 2: Usando código fuente
 python main_cli.py --input-type file --input examples/file_examples/valid_emails.txt --new-domain new.com --output-type inline
@@ -77,5 +77,6 @@ python main_cli.py --input-type file --input examples/file_examples/valid_emails
 | `invalid_dots.txt` | 5 | 0 | 5 | 0% |
 | `invalid_length.txt` | 5 | 0 | 5 | 0% |
 | `invalid_characters.txt` | 6 | 1 | 5 | 17% |
+| `accented_names.txt` | 5 | 0 | 5 | 0% |
 | `mixed_valid_invalid.txt` | 10 | 5 | 5 | 50% |
 | `sample_emails.txt` | 60 | 60 | 0 | 100% |

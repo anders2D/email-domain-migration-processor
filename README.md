@@ -10,6 +10,7 @@
 
 ## ⚡ Inicio Rápido (30 segundos)
 
+### Ejemplo 1: Desde lista inline
 ```bash
 # Instalar
 pip install email-processor-cli
@@ -18,12 +19,53 @@ pip install email-processor-cli
 email-processor --input-type list \
   --input "juan.perez@old.com,maria.garcia@old.com" \
   --new-domain company.com \
-  --output-type inline
+  --output-type csv \
+  --output result.csv
 
-# Resultado
-juan.perez@company.com
-maria.garcia@company.com
+# Resultado:
+[OK] Processed 2/2 emails
+[OK] Error log: error_log.txt
+[OK] Summary: summary.txt
 ```
+
+### Ejemplo 2: Desde archivo TXT
+```bash
+# Crear archivo de entrada
+echo "juan.perez@old.com" > emails.txt
+echo "maria.garcia@old.com" >> emails.txt
+
+# Procesar
+email-processor --input-type file \
+  --input emails.txt \
+  --new-domain nuevo.com \
+  --output-type csv \
+  --output result.csv
+```
+
+**Archivo generado (result.csv):**
+```csv
+Nombre,Apellido,Correo Original,Correo Nuevo
+Juan,Perez,juan.perez@old.com,juan.perez@company.com
+Maria,Garcia,maria.garcia@old.com,maria.garcia@company.com
+```
+
+## 📚 Documentación Técnica
+
+### 🎯 Documentos Principales (Prueba Técnica)
+
+| Documento | Qué Demuestra | Enlace |
+|-----------|---------------|--------|
+| 📘 **PDD** | Análisis de proceso AS-IS, reglas de negocio, identificación de oportunidades de automatización | **[Ver PDD](docs/pdd/PDD.md)** |
+| 🏗️ **SDD** | Arquitectura hexagonal, diseño técnico, decisiones de implementación, patrones de diseño | **[Ver SDD](docs/sdd/SDD.md)** |
+| 🔄 **n8n** | Integración con herramientas de automatización, workflows visuales, casos de uso reales | **[Ver n8n](docs/N8N_INTEGRATION.md)** |
+
+### 📖 Guías de Implementación
+
+- 🚀 **[Inicio Rápido](docs/QUICK_START.md)** - Instalación y primeros pasos
+- 📦 **[Despliegue](docs/DEPLOYMENT_GUIDE.md)** - CLI, API REST, AWS Lambda con Terraform
+- 💻 **[Ejemplos de Código](examples/)** - Uso como CLI, API y librería Python
+
+---
 
 ## 🎬 Demo en Acción
 
@@ -35,6 +77,9 @@ maria.garcia@company.com
 
 ### Validación de Errores
 ![Demo Validación](demos/demo_validation.svg)
+
+### Integración con n8n
+![Demo n8n](docs/n8n/n8n_flow.png)
 
 ## 🚀 ¿Por Qué Este Procesador?
 
@@ -54,10 +99,11 @@ maria.garcia@company.com
 - 🔒 **Seguro** - Validación estricta, sin persistencia de datos sensibles
 - 📈 **Escalable** - De 10 a 10,000 correos sin cambios
 - 📝 **Trazable** - Logs automáticos de cada operación
+- 📊 **Múltiples Formatos** - CSV, Excel, JSON, TXT, Inline, Silent
 
 ## 🎯 Casos de Uso
 
-### 1️⃣ Migración Corporativa
+### 1️⃣ Migración Corporativa (CSV)
 ```bash
 # Migrar 1000 empleados de @oldcompany.com a @newcompany.com
 email-processor --input-type file \
@@ -65,6 +111,40 @@ email-processor --input-type file \
   --new-domain newcompany.com \
   --output-type csv \
   --output migrated.csv
+```
+
+### 1️⃣.1 Migración a Excel
+```bash
+# Generar reporte en Excel para análisis
+email-processor --input-type file \
+  --input employees.txt \
+  --new-domain newcompany.com \
+  --output-type excel \
+  --output migrated.xlsx
+```
+
+### 1️⃣.2 Migración a TXT
+```bash
+# Generar archivo de texto plano
+email-processor --input-type file \
+  --input employees.txt \
+  --new-domain newcompany.com \
+  --output-type txt \
+  --output migrated.txt
+```
+
+### 1️⃣.3 Salida en Consola (Inline)
+```bash
+# Ver resultados directamente en consola
+email-processor --input-type list \
+  --input "juan.perez@old.com,maria.garcia@old.com" \
+  --new-domain newcompany.com \
+  --output-type inline
+
+# Salida:
+# Nombre,Apellido,Correo Original,Correo Nuevo
+# Juan,Perez,juan.perez@old.com,juan.perez@newcompany.com
+# Maria,Garcia,maria.garcia@old.com,maria.garcia@newcompany.com
 ```
 
 ### 2️⃣ API para Integraciones
@@ -106,6 +186,30 @@ Formato requerido: `nombre.apellido@dominio.com`
 
 Ver [reglas completas](docs/pdd/PDD.md#31-validación) en la documentación.
 
+## 📊 Formatos de Salida
+
+Todos los formatos generan **4 campos** según el PDD:
+- **Nombre** - Nombre capitalizado
+- **Apellido** - Apellido capitalizado
+- **Correo Original** - Email de entrada
+- **Correo Nuevo** - Email con nuevo dominio
+
+| Formato | Extensión | Uso Recomendado | Comando |
+|---------|-----------|-----------------|----------|
+| 📊 **CSV** | `.csv` | Análisis de datos, importación masiva | `--output-type csv --output file.csv` |
+| 📗 **Excel** | `.xlsx` | Reportes ejecutivos, presentaciones | `--output-type excel --output file.xlsx` |
+| 📝 **TXT** | `.txt` | Archivos de texto plano, scripts | `--output-type txt --output file.txt` |
+| 📜 **JSON** | `.json` | APIs, integraciones, aplicaciones | `--output-type json --output file.json` |
+| 💻 **Inline** | Consola | Verificación rápida, debugging | `--output-type inline` |
+| 🔇 **Silent** | Ninguno | Procesos automatizados, pipelines | `--output-type silent` |
+
+**Ejemplo de salida (todos los formatos):**
+```
+Nombre,Apellido,Correo Original,Correo Nuevo
+Juan,Perez,juan.perez@old.com,juan.perez@new.com
+Maria,Garcia,maria.garcia@old.com,maria.garcia@new.com
+```
+
 ## 📦 Instalación
 
 ```bash
@@ -114,40 +218,24 @@ pip install email-processor-cli
 
 Ver [Guía de Instalación](docs/QUICK_START.md) para más opciones.
 
-## 📚 Documentación Completa
+## 🏗️ Arquitectura y Diseño
 
-| Documento | Descripción |
-|-----------|-------------|
-| 🚀 **[Inicio Rápido](docs/QUICK_START.md)** | Comienza en 5 minutos |
-| 📖 **[Guía de Despliegue](docs/DEPLOYMENT_GUIDE.md)** | CLI, API Local, AWS Lambda |
-| ⚡ **[Cheatsheet](docs/CHEATSHEET.md)** | Comandos y referencia rápida |
-| 📋 **[PDD](docs/pdd/PDD.md)** | Proceso de negocio y reglas |
-| 🔄 **[Integración n8n](docs/N8N_INTEGRATION.md)** | Automatización visual |
-| 💻 **[Ejemplos](examples/)** | Código completo CLI, API, Librería |
+### Patrones Implementados
+- ✅ **Hexagonal (Ports & Adapters)** - Núcleo de negocio aislado de infraestructura
+- ✅ **Domain-Driven Design** - Lógica de negocio en el dominio
+- ✅ **Dependency Injection** - Bajo acoplamiento entre componentes
+- ✅ **Multi-interfaz** - CLI, API REST, Librería Python, AWS Lambda
 
-## 🏗️ Arquitectura
-
-- ✅ **Hexagonal (Ports & Adapters)** - Núcleo de negocio aislado
+### Infraestructura
 - ✅ **Stateless** - Escalable horizontalmente sin límites
-- ✅ **Multi-interfaz** - CLI, API REST, Librería, Lambda
-- ✅ **IaC con Terraform** - Infraestructura reproducible
-- ✅ **Serverless AWS** - Sin servidores que mantener
+- ✅ **IaC con Terraform** - Infraestructura como código reproducible
+- ✅ **Serverless AWS** - Lambda + API Gateway
+- ✅ **CI/CD Ready** - Preparado para pipelines de despliegue
 
-## 🤝 Contribuir
-
-Contribuciones bienvenidas! Ver [ejemplos](examples/) para casos de uso.
-
-## 📄 Licencia
-
-MIT License - Ver [LICENSE](LICENSE) para detalles.
-
-## 👤 Autor
-
-**Anderson Taguada**
-
-- GitHub: [@anders2d](https://github.com/anders2d)
-- Email: ferchoafta@gmail.com
+**Detalles completos:** [Ver SDD](docs/sdd/SDD.md)
 
 ---
 
-⭐ Si este proyecto te ayudó, considera darle una estrella en GitHub!
+## 📄 Información del Proyecto
+
+**Autor:** Anderson Taguada | **Licencia:** MIT | **GitHub:** [@anders2d](https://github.com/anders2d)

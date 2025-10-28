@@ -8,12 +8,12 @@ import sys
 def test_cli():
     print("Testing CLI...")
     result = subprocess.run([
-        sys.executable, "main_cli.py",
+        "email-processor",
         "--input-type", "list",
         "--input", "juan.perez@old.com",
         "--new-domain", "test.com",
         "--output-type", "inline"
-    ], capture_output=True, text=True)
+    ], capture_output=True, text=True, shell=True)
     
     success = result.returncode == 0 and "juan.perez@test.com" in result.stdout
     print(f"[{'OK' if success else 'FAIL'}] CLI\n")

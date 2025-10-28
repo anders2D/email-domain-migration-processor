@@ -85,27 +85,15 @@ def main():
     print("\n[4/6] Verificando paquete...")
     print("OK Omitiendo verificacion (publicando directamente)")
     
-    # Preguntar destino
-    print("\n[5/6] Seleccionar destino:")
-    print("  1. TestPyPI (pruebas)")
-    print("  2. PyPI (producción)")
-    choice = input("Ingrese opción (1 o 2): ").strip()
+    # Publicar directamente a PyPI (producción)
+    print("\n[5/6] Destino: PyPI (producción)")
     
     # Publicar
     print("\n[6/6] Publicando...")
-    if choice == "1":
-        print("Subiendo a TestPyPI...")
-        run_command("twine upload --repository testpypi dist/*", cwd=project_dir)
-        print(f"\nOK Publicado en TestPyPI!")
-        print(f"   https://test.pypi.org/project/email-processor-cli/{version}/")
-    elif choice == "2":
-        print("Subiendo a PyPI...")
-        run_command("twine upload dist/*", cwd=project_dir)
-        print(f"\nOK Publicado en PyPI!")
-        print(f"   https://pypi.org/project/email-processor-cli/{version}/")
-    else:
-        print("ERROR Opcion invalida")
-        sys.exit(1)
+    print("Subiendo a PyPI...")
+    run_command("twine upload dist/*", cwd=project_dir)
+    print(f"\nOK Publicado en PyPI!")
+    print(f"   https://pypi.org/project/email-processor-cli/{version}/")
     
     print("\n" + "=" * 50)
     print("  Publicacion completada!")

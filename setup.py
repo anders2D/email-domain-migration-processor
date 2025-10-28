@@ -5,13 +5,13 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="email-processor-cli",
-    version="2025.10.27.192812",
+    version="2025.10.28.192459",
     author="Anderson Taguada",
-    author_email="your.email@example.com",
+    author_email="ferchoafta@gmail.com",
     description="CLI tool for email processing with domain migration",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/hiperautomatization",
+    url="https://github.com/anders2D/email-domain-migration-processor",
     packages=find_packages(),
     license="MIT",
     classifiers=[
@@ -30,6 +30,7 @@ setup(
     install_requires=[
         "flask>=3.0.0",
         "requests>=2.31.0",
+        "openpyxl>=3.1.2",
     ],
     entry_points={
         "console_scripts": [
@@ -39,8 +40,8 @@ setup(
     include_package_data=True,
     keywords="email processing cli domain migration automation",
     project_urls={
-        "Bug Reports": "https://github.com/yourusername/hiperautomatization/issues",
-        "Source": "https://github.com/yourusername/hiperautomatization",
-        "Documentation": "https://github.com/yourusername/hiperautomatization/blob/main/README.md",
+        "Bug Reports": "https://github.com/anders2D/email-domain-migration-processor/issues",
+        "Source": "https://github.com/anders2D/email-domain-migration-processor",
+        "Documentation": "https://github.com/anders2D/email-domain-migration-processor/blob/main/README.md",
     },
 )

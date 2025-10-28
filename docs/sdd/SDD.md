@@ -254,7 +254,7 @@ Sistema automatizado con arquitectura hexagonal que procesa correos electrónico
 
 **Funcionales:**
 - Solo formato nombre.apellido@dominio
-- Solo caracteres latinos y acentuados
+- Solo caracteres latinos sin acentos (a-z, A-Z)
 - Longitud nombre/apellido: 2-50 caracteres
 
 **Operativas:**
@@ -291,10 +291,10 @@ class Email:
 ```
 
 **Métodos:**
-- `create(nombre, apellido, correo_original, nuevo_dominio)` → Email
-- `from_string(email)` → Email
-- `change_domain(new_domain)` → void
-- `to_list()` → List[str]
+- `create(nombre, apellido, correo_original, nuevo_dominio)` → Email (factory method)
+- `to_dict()` → Dict[str, str] (serialización a diccionario)
+- `to_list()` → List[str] (serialización a lista)
+- `__str__()` → str (retorna correo_nuevo)
 
 ### 3.5 Interfaces (Ports)
 
@@ -390,7 +390,7 @@ def error(message: str) -> None
 - **Reglas:** BR-001 a BR-005
 - **Patterns:**
   - `email_pattern`: Formato general
-  - `name_pattern`: `[a-zA-ZáéíóúñüÁÉÍÓÚÑÜ]+`
+  - `name_pattern`: `[a-zA-Z]+` (sin acentos)
 
 #### 4.4.2 Logging Adapter
 - **Archivo:** `src/shared/logging_adapter.py`
@@ -412,9 +412,9 @@ def error(message: str) -> None
 | REQ-001 | Validar formato email (nombre.apellido@dominio) | ValidationAdapter | `validation_adapter.py` | `test_br001_single_at` | ✅ |
 | REQ-002 | Extraer nombre del email | Email Entity | `email.py` | `test_email_create` | ✅ |
 | REQ-003 | Extraer apellido del email | Email Entity | `email.py` | `test_email_create` | ✅ |
-| REQ-004 | Capitalizar nombre | Email Entity (TR-001) | `email.py:15` | `test_tr001_capitalize_nombre` | ✅ |
-| REQ-005 | Capitalizar apellido | Email Entity (TR-002) | `email.py:15` | `test_tr002_capitalize_apellido` | ✅ |
-| REQ-006 | Generar nuevo correo con dominio | Email Entity (TR-005) | `email.py:14` | `test_tr005_apply_new_domain` | ✅ |
+| REQ-004 | Capitalizar nombre | Email Entity (TR-001) | `email.py` (método `create()`) | `test_tr001_capitalize_nombre` | ✅ |
+| REQ-005 | Capitalizar apellido | Email Entity (TR-002) | `email.py` (método `create()`) | `test_tr002_capitalize_apellido` | ✅ |
+| REQ-006 | Generar nuevo correo con dominio | Email Entity (TR-005) | `email.py` (método `create()`) | `test_tr005_apply_new_domain` | ✅ |
 | REQ-007 | Leer archivo .txt | FileAdapter | `file_adapter.py` | `test_cli_file_to_csv` | ✅ |
 | REQ-008 | Generar archivo CSV | CSVAdapter | `csv_adapter.py` | `test_process_emails_success` | ✅ |
 | REQ-009 | Registrar errores de validación | LoggingAdapter | `logging_adapter.py` | `test_validation_logging` | ✅ |
@@ -432,17 +432,17 @@ def error(message: str) -> None
 | Prefijo debe tener exactamente un punto | BR-002 | `validation_adapter.py` | L25 | `test_br002_single_dot` |
 | Nombre entre 2-50 caracteres | BR-003 | `validation_adapter.py` | L32 | `test_br003_nombre_length` |
 | Apellido entre 2-50 caracteres | BR-004 | `validation_adapter.py` | L33 | `test_br004_apellido_length` |
-| Solo letras (incluyendo acentuadas) | BR-005 | `validation_adapter.py` | L30 | `test_br005_only_letters` |
+| Solo letras (sin acentos) | BR-005 | `validation_adapter.py` | L30 | `test_br005_only_letters` |
 
 **Transformación (TR):**
 
 | Regla PDD | ID | Implementación SDD | Línea Código | Test Unitario |
 |-----------|----|--------------------|--------------|---------------|
-| Capitalizar primer nombre | TR-001 | `email.py` | L15 | `test_tr001_capitalize_nombre` |
-| Capitalizar apellido | TR-002 | `email.py` | L15 | `test_tr002_capitalize_apellido` |
-| Minúsculas en email | TR-003 | `email.py` | L14 | `test_tr003_lowercase_email` |
-| Preservar dominio original | TR-004 | `email.py` | L7 | `test_tr004_preserve_original` |
-| Aplicar nuevo dominio | TR-005 | `email.py` | L14 | `test_tr005_apply_new_domain` |
+| Capitalizar primer nombre | TR-001 | `email.py` (método `create()`) | - | `test_tr001_capitalize_nombre` |
+| Capitalizar apellido | TR-002 | `email.py` (método `create()`) | - | `test_tr002_capitalize_apellido` |
+| Minúsculas en email | TR-003 | `email.py` (método `create()`) | - | `test_tr003_lowercase_email` |
+| Preservar dominio original | TR-004 | `email.py` (atributo `correo_original`) | - | `test_tr004_preserve_original` |
+| Aplicar nuevo dominio | TR-005 | `email.py` (método `create()`) | - | `test_tr005_apply_new_domain` |
 
 ### 5.3 KPIs de Negocio y Métricas de Éxito
 
@@ -484,17 +484,17 @@ def error(message: str) -> None
 | BR-002 | Exactamente un punto en prefijo | `validation_adapter.py:25` | `test_br002_single_dot` |
 | BR-003 | Nombre 2-50 caracteres | `validation_adapter.py:32` | `test_br003_nombre_length` |
 | BR-004 | Apellido 2-50 caracteres | `validation_adapter.py:33` | `test_br004_apellido_length` |
-| BR-005 | Solo letras (incluyendo acentuadas) | `validation_adapter.py:30` | `test_br005_only_letters` |
+| BR-005 | Solo letras (sin acentos) | `validation_adapter.py:30` | `test_br005_only_letters` |
 
 ### 6.2 Reglas de Transformación (TR)
 
 | ID | Regla | Implementación | Test |
 |----|-------|----------------|------|
-| TR-001 | Capitalizar nombre | `email.py:15` | `test_tr001_capitalize_nombre` |
-| TR-002 | Capitalizar apellido | `email.py:15` | `test_tr002_capitalize_apellido` |
-| TR-003 | Minúsculas en correo | `email.py:14` | `test_tr003_lowercase_email` |
-| TR-004 | Preservar dominio original | `email.py:7` | `test_tr004_preserve_original` |
-| TR-005 | Aplicar nuevo dominio | `email.py:14` | `test_tr005_apply_new_domain` |
+| TR-001 | Capitalizar nombre | `email.py` (método `create()`) | `test_tr001_capitalize_nombre` |
+| TR-002 | Capitalizar apellido | `email.py` (método `create()`) | `test_tr002_capitalize_apellido` |
+| TR-003 | Minúsculas en correo | `email.py` (método `create()`) | `test_tr003_lowercase_email` |
+| TR-004 | Preservar dominio original | `email.py` (atributo `correo_original`) | `test_tr004_preserve_original` |
+| TR-005 | Aplicar nuevo dominio | `email.py` (método `create()`) | `test_tr005_apply_new_domain` |
 
 ---
 

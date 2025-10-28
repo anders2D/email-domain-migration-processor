@@ -1,23 +1,23 @@
 %%{init: {'theme':'base'}}%%
 gantt
-    title Plan de Transición - 4 Meses
-    dateFormat YYYY-MM
-    axisFormat %b
+    title Plan de Transición - 1 Mes
+    dateFormat YYYY-MM-DD
+    axisFormat %d/%m
     
-    section Fase 1: Desarrollo
-    Desarrollo solución básica           :f1a, 2025-11, 3w
-    Validación funcional                 :f1b, after f1a, 1w
+    section Semana 1: Desarrollo
+    Desarrollo solución básica           :f1a, 2025-11-01, 5d
+    Validación funcional                 :f1b, after f1a, 2d
     
-    section Fase 2: Pruebas
-    Pruebas piloto con casos reales      :f2a, 2025-12, 2w
-    Ajustes según feedback               :f2b, after f2a, 2w
+    section Semana 2: Pruebas
+    Pruebas piloto con casos reales      :f2a, 2025-11-08, 3d
+    Ajustes según feedback               :f2b, after f2a, 4d
     
-    section Fase 3: Capacitación
-    Capacitación usuarios                :f3a, 2026-01, 2w
-    Documentación                        :f3b, 2026-01, 1w
-    Migración gradual                    :f3c, after f3b, 1w
+    section Semana 3: Capacitación
+    Capacitación usuarios                :f3a, 2025-11-15, 3d
+    Documentación                        :f3b, 2025-11-15, 2d
+    Migración gradual                    :f3c, after f3a, 4d
     
-    section Fase 4: Producción
-    Puesta en producción                 :milestone, f4a, 2026-02, 1w
-    Monitoreo                            :f4b, after f4a, 2w
-    Soporte post-implementación          :f4c, after f4b, 1w
+    section Semana 4: Producción
+    Puesta en producción                 :milestone, f4a, 2025-11-22, 2d
+    Monitoreo                            :f4b, after f4a, 3d
+    Soporte post-implementación          :f4c, after f4b, 3d

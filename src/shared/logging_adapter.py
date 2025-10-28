@@ -1,4 +1,5 @@
 import logging
+import os
 from datetime import datetime
 from src.features.email_processing.domain.ports import Logger
 
@@ -14,17 +15,20 @@ class PythonLogger(Logger):
             
             console_handler = logging.StreamHandler()
             console_handler.setLevel(logging.INFO)
-            
-            log_file = f"email_processor_{datetime.now().strftime('%Y%m%d')}.log"
-            file_handler = logging.FileHandler(log_file, encoding='utf-8')
-            file_handler.setLevel(logging.DEBUG)
-            
             formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
             console_handler.setFormatter(formatter)
-            file_handler.setFormatter(formatter)
-            
             self.logger.addHandler(console_handler)
-            self.logger.addHandler(file_handler)
+            
+            # Solo agregar file handler si NO estamos en Lambda
+            if not os.environ.get('AWS_LAMBDA_FUNCTION_NAME'):
+                try:
+                    log_file = f"email_processor_{datetime.now().strftime('%Y%m%d')}.log"
+                    file_handler = logging.FileHandler(log_file, encoding='utf-8')
+                    file_handler.setLevel(logging.DEBUG)
+                    file_handler.setFormatter(formatter)
+                    self.logger.addHandler(file_handler)
+                except (OSError, PermissionError):
+                    pass
     
     def info(self, message: str):
         self.logger.info(message)

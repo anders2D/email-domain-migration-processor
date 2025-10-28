@@ -50,7 +50,7 @@ TRANSFORM OPTIONS:
   --new-domain    New domain for emails (required)
 
 OUTPUT OPTIONS:
-  --output-type   Type: csv, json, inline, silent (default: csv)
+  --output-type   Type: csv, json, excel, txt, inline, silent (default: csv)
   --output        Output file path (required for csv/json)
 
 EXAMPLES:
@@ -175,11 +175,63 @@ EXAMPLES:
             print(f"[OK] Saved to {output_file}")
             return len(email_objects)
         
+        elif output_type == 'excel':
+            if not output_file:
+                raise ValueError("output_file required for excel")
+            email_objects = []
+            for item in transformed:
+                if item.get('valid'):
+                    from src.features.email_processing.domain.email import Email
+                    parts = item['transformed'].split('@')
+                    if len(parts) == 2:
+                        name_parts = parts[0].split('.')
+                        if len(name_parts) == 2:
+                            email_obj = Email.create(
+                                nombre=name_parts[0],
+                                apellido=name_parts[1],
+                                correo_original=item['original'],
+                                nuevo_dominio=parts[1]
+                            )
+                            email_objects.append(email_obj)
+            from src.features.email_processing.adapters.output.excel_adapter import ExcelEmailWriter
+            ExcelEmailWriter().save_emails(email_objects, output_file)
+            print(f"[OK] Saved to {output_file}")
+            return len(email_objects)
+        
+        elif output_type == 'txt':
+            if not output_file:
+                raise ValueError("output_file required for txt")
+            email_objects = []
+            for item in transformed:
+                if item.get('valid'):
+                    from src.features.email_processing.domain.email import Email
+                    parts = item['transformed'].split('@')
+                    if len(parts) == 2:
+                        name_parts = parts[0].split('.')
+                        if len(name_parts) == 2:
+                            email_obj = Email.create(
+                                nombre=name_parts[0],
+                                apellido=name_parts[1],
+                                correo_original=item['original'],
+                                nuevo_dominio=parts[1]
+                            )
+                            email_objects.append(email_obj)
+            from src.features.email_processing.adapters.output.txt_adapter import TxtEmailWriter
+            TxtEmailWriter().save_emails(email_objects, output_file)
+            print(f"[OK] Saved to {output_file}")
+            return len(email_objects)
+        
         elif output_type == 'inline':
-            emails = [item['transformed'] for item in transformed if item.get('valid')]
-            for email in emails:
-                print(email)
-            return len(emails)
+            # Mostrar los 4 campos según PDD
+            print("Nombre,Apellido,Correo Original,Correo Nuevo")
+            for item in transformed:
+                if item.get('valid'):
+                    parts = item['transformed'].split('@')
+                    if len(parts) == 2:
+                        name_parts = parts[0].split('.')
+                        if len(name_parts) == 2:
+                            print(f"{name_parts[0].capitalize()},{name_parts[1].capitalize()},{item['original']},{item['transformed']}")
+            return sum(1 for item in transformed if item.get('valid'))
         
         elif output_type == 'silent':
             emails = [item['transformed'] for item in transformed if item.get('valid')]
