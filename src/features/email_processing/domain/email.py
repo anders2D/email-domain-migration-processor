@@ -14,7 +14,7 @@ class Email:
     @classmethod
     def create(cls, nombre: str, apellido: str, correo_original: str, nuevo_dominio: str):
         """Factory method para crear Email con transformaciones TR-001 a TR-005."""
-        correo_nuevo = f"{nombre.lower()}.{apellido.lower()}@{nuevo_dominio}"
+        correo_nuevo = f"{nombre.lower()}.{apellido.lower()}@{nuevo_dominio.lower()}"
         return cls(nombre.capitalize(), apellido.capitalize(), correo_original, correo_nuevo)
     
     def __str__(self):

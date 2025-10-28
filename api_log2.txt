@@ -1,0 +1,17 @@
+2025-10-27 19:50:41,663 - src.features.email_processing.adapters.input.api_adapter - INFO - Starting API server on localhost:5000
+=== Email Processing API - Modular & Stateless ===
+Server: http://localhost:5000
+
+Endpoints:
+  POST /validate   - Validate a single email
+  POST /extract    - Extract emails from source
+  POST /transform  - Transform emails with new domain
+  POST /generate   - Generate output in format
+
+Test: python test_api.py
+
+ * Serving Flask app 'src.features.email_processing.adapters.input.api_adapter'
+ * Debug mode: off
+2025-10-27 19:50:41,711 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://localhost:5000
+2025-10-27 19:50:41,726 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
