@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500">
+  <style>
+    .terminal { font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 12px; }
+    .bg { fill: #1e1e1e; }
+    .text { fill: #d4d4d4; }
+    .prompt { fill: #4ec9b0; }
+    .command { fill: #dcdcaa; }
+    .output { fill: #ce9178; }
+    .success { fill: #4ec9b0; }
+    .header { fill: #569cd6; font-weight: bold; }
+  </style>
+  
+  <rect class="bg" width="900" height="500"/>
+  
+  <text class="terminal prompt" x="20" y="30">$</text>
+  <text class="terminal command" x="35" y="30">email-processor --input-type list --input "maria.garcia@example.com,pedro.lopez@example.com"</text>
+  <text class="terminal command" x="35" y="50">  --new-domain company.com --output-type csv --output demo_output.csv</text>
+  
+  <text class="terminal success" x="20" y="80">[OK] Saved to demo_output.csv</text>
+  <text class="terminal success" x="20" y="100">[OK] Processed 2/2 emails</text>
+  <text class="terminal text" x="20" y="120">[OK] Error log: error_log.txt</text>
+  <text class="terminal text" x="20" y="140">[OK] Summary: summary.txt</text>
+  
+  <text class="terminal prompt" x="20" y="180">$</text>
+  <text class="terminal command" x="35" y="180">cat demo_output.csv</text>
+  
+  <text class="terminal header" x="20" y="210">Nombre,Apellido,Correo Original,Correo Nuevo</text>
+  <text class="terminal output" x="20" y="230">Maria,Garcia,maria.garcia@example.com,maria.garcia@company.com</text>
+  <text class="terminal output" x="20" y="250">Pedro,Lopez,pedro.lopez@example.com,pedro.lopez@company.com</text>
+</svg>

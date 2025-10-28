@@ -139,7 +139,7 @@ EXAMPLES:
                                 nuevo_dominio=parts[1]
                             )
                             email_objects.append(email_obj)
-            CsvEmailWriter().write(email_objects, output_file)
+            CsvEmailWriter().save_emails(email_objects, output_file)
             print(f"[OK] Saved to {output_file}")
             return len(email_objects)
         
@@ -229,5 +229,4 @@ EXAMPLES:
         
         except Exception as e:
             logger.error(f"Error: {e}")
-            print(f"[ERROR] {e}")
             raise

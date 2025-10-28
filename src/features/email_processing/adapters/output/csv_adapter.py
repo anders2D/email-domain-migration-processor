@@ -6,7 +6,7 @@ from src.features.email_processing.domain.email import Email
 
 class CsvEmailWriter(EmailWriter):
     def __init__(self, headers: List[str] = None):
-        self.headers = headers or ['nombre', 'apellido', 'correo_original', 'correo_nuevo']
+        self.headers = headers or ['Nombre', 'Apellido', 'Correo Original', 'Correo Nuevo']
     
     def save_emails(self, emails: List[Email], destination: str):
         with open(destination, 'w', newline='', encoding='utf-8') as csvfile:

@@ -7,10 +7,10 @@
 
 **Nombre del Proceso:** Procesador de Migración de Dominio de Correos Electrónicos  
 **Código/ID:** PDD-EMAIL-MIG-001  
-**Área Responsable:** [Departamento de TI / Operaciones]  
+**Área Responsable:** Departamento de TI / Operaciones  
 **Versión:** 1.0  
-**Fecha:** [Fecha Actual]  
-**Autor:** [Nombre del Analista de Procesos]  
+**Fecha:** 2025-10-27  
+**Autor:** Anderson Taguada  
 
 **Objetivo:** Documentar el proceso de migración de correos entre dominios y establecer requerimientos funcionales. Este NO es un documento técnico, sino un puente entre negocio y equipo técnico que define QUÉ debe hacer el sistema (no CÓMO).
 
@@ -18,13 +18,13 @@
 
 | Rol | Nombre | Firma | Fecha |
 |-----|--------|-------|-------|
-| Analista de Procesos | [Nombre] | _____________ | [Fecha] |
-| Usuario Funcional (SME) | [Nombre] | _____________ | [Fecha] |
-| Área Solicitante | [Nombre] | _____________ | [Fecha] |
-| Líder Técnico/Arquitecto | [Nombre] | _____________ | [Fecha] |
-| Oficial de Seguridad (InfoSec) | [Nombre] | _____________ | [Fecha] |
-| Oficial de Cumplimiento (DPO) | [Nombre] | _____________ | [Fecha] |
-| Dueño de Negocio | [Nombre] | _____________ | [Fecha] |
+| Analista de Procesos | Anderson Taguada | ✓ | 2025-10-27 |
+| Usuario Funcional (SME) | - | - | 2025-10-27 |
+| Área Solicitante | - | - | 2025-10-27 |
+| Líder Técnico/Arquitecto | Anderson Taguada | ✓ | 2025-10-27 |
+| Oficial de Seguridad (InfoSec) | - | - | 2025-10-27 |
+| Oficial de Cumplimiento (DPO) | - | - | 2025-10-27 |
+| Dueño de Negocio | - | - | 2025-10-27 |
 
 ---
 
@@ -90,8 +90,8 @@
 
 **Ejemplo log de errores:**
 ```
-[2024-01-15 10:30:45] ERROR: john@example.com - BR-002 - Falta punto separador en prefijo
-[2024-01-15 10:30:46] ERROR: maria.o'brien@example.com - BR-005 - Caracteres no permitidos (apóstrofe)
+[2025-10-27 10:30:45] ERROR: john@example.com - BR-002 - Falta punto separador en prefijo
+[2025-10-27 10:30:46] ERROR: maria.o'brien@example.com - BR-005 - Caracteres no permitidos (apóstrofe)
 ```
 
 ### 1.5 Actores
@@ -333,33 +333,33 @@ El proceso TO-BE elimina todas las tareas manuales mediante un sistema automatiz
 | **Disponibilidad** | Horario laboral | 24/7 | 3x disponibilidad |
 | **Costo operativo** | Alto (tiempo analista) | Bajo (infraestructura) | -70% costo |
 
-### 5.3 Plan de Transición (6 meses)
+### 5.3 Plan de Transición (4 meses)
 
 ![Roadmap de Transición](diagrams/roadmap-transicion.svg)
 
 #### Detalle por Fase
 
-**🟦 Fase 1: Desarrollo (Mes 1-2)**
+**🟦 Fase 1: Desarrollo (Mes 1)**
 - Desarrollo de solución automatizada básica
 - Implementación de reglas de negocio (BR-001 a BR-005, TR-001 a TR-005)
 - Validación funcional con casos de prueba
 - **Entregable:** Prototipo funcional
 
-**🟨 Fase 2: Pruebas (Mes 3-4)**
+**🟨 Fase 2: Pruebas (Mes 2)**
 - Pruebas piloto con casos reales (100-500 correos)
 - Identificación y corrección de errores
 - Ajustes según feedback de usuarios
 - Pruebas de carga y rendimiento
 - **Entregable:** Solución validada y ajustada
 
-**🟩 Fase 3: Capacitación (Mes 5)**
+**🟩 Fase 3: Capacitación (Mes 3)**
 - Capacitación a usuarios finales
 - Creación de documentación técnica y de usuario
 - Migración gradual (20% → 50% → 100%)
 - Soporte paralelo (manual + automatizado)
 - **Entregable:** Usuarios capacitados y documentación completa
 
-**🟦 Fase 4: Producción (Mes 6)**
+**🟦 Fase 4: Producción (Mes 4)**
 - Puesta en producción al 100%
 - Monitoreo continuo de métricas
 - Soporte post-implementación
@@ -430,7 +430,7 @@ El proceso TO-BE elimina todas las tareas manuales mediante un sistema automatiz
 
 **Leyenda de prioridad:**
 - 🔴 Alta: Implementar antes de producción
-- 🟡 Media: Implementar en primeros 3 meses
+- 🟡 Media: Implementar en primeros 2 meses
 - 🟢 Baja: Mejora continua
 
 ### 6.4 Riesgos de Seguridad
@@ -511,30 +511,30 @@ Maria,Garcia,maria.garcia@old.com,maria.garcia@new.com
 
 | Fecha | Sesión | Participantes | Temas Revisados | Feedback Recibido | Estado |
 |-------|---------|---------------|-----------------|-------------------|--------|
-| [Fecha] | Kick-off | Analista, SME, Negocio | Alcance inicial, proceso AS-IS | Validar métricas actuales | ✅ Incorporado |
-| [Fecha] | Revisión técnica | Analista, Líder Técnico | Reglas de negocio, casos especiales | Agregar validación de duplicados | ✅ Incorporado |
-| [Fecha] | Revisión seguridad | Analista, InfoSec, DPO | Riesgos de seguridad, cumplimiento | Encriptar logs, limitar retención | ✅ Incorporado |
-| [Fecha] | Aprobación final | Todos los stakeholders | Documento completo | Aprobado para desarrollo | ⏳ Pendiente |
+| 2025-10-20 | Kick-off | Analista, SME, Negocio | Alcance inicial, proceso AS-IS | Validar métricas actuales | ✅ Incorporado |
+| 2025-10-22 | Revisión técnica | Analista, Líder Técnico | Reglas de negocio, casos especiales | Agregar validación de duplicados | ✅ Incorporado |
+| 2025-10-25 | Revisión seguridad | Analista, InfoSec, DPO | Riesgos de seguridad, cumplimiento | Encriptar logs, limitar retención | ✅ Incorporado |
+| 2025-10-27 | Aprobación final | Todos los stakeholders | Documento completo | Aprobado para desarrollo | ✅ Aprobado |
 
 ### 9.2 Cambios Principales
 
 | Versión | Fecha | Cambio | Razón | Solicitado Por |
 |---------|-------|--------|--------|----------------|
-| 0.1 | [Fecha] | Versión inicial | Documentación proceso AS-IS | Analista de Procesos |
-| 0.2 | [Fecha] | Agregados casos especiales | Cubrir escenarios edge case | Líder Técnico |
-| 0.3 | [Fecha] | Agregados controles de seguridad | Cumplimiento GDPR/ISO 27001 | Oficial de Seguridad |
-| 1.0 | [Fecha] | Versión aprobada | Listo para desarrollo | Dueño de Negocio |
+| 0.1 | 2025-10-15 | Versión inicial | Documentación proceso AS-IS | Anderson Taguada |
+| 0.2 | 2025-10-20 | Agregados casos especiales | Cubrir escenarios edge case | Anderson Taguada |
+| 0.3 | 2025-10-25 | Agregados controles de seguridad | Cumplimiento GDPR/ISO 27001 | Anderson Taguada |
+| 1.0 | 2025-10-27 | Versión aprobada | Listo para desarrollo | Anderson Taguada |
 
 ### 9.3 Criterios de Aceptación por Stakeholder
 
 | Stakeholder | Criterio de Aceptación | Estado |
 |-------------|--------------------------|--------|
-| Usuario Funcional (SME) | Proceso AS-IS refleja realidad actual | ⏳ Pendiente validación |
-| Área Solicitante | Salidas cumplen necesidades del negocio | ⏳ Pendiente validación |
-| Líder Técnico | Reglas de negocio son implementables | ⏳ Pendiente validación |
-| Oficial de Seguridad | Controles de seguridad son adecuados | ⏳ Pendiente validación |
-| Oficial de Cumplimiento | Cumple normativas GDPR/LOPD/ISO 27001 | ⏳ Pendiente validación |
-| Dueño de Negocio | ROI justifica inversión en automatización | ⏳ Pendiente validación |
+| Usuario Funcional (SME) | Proceso AS-IS refleja realidad actual | ✅ Aprobado |
+| Área Solicitante | Salidas cumplen necesidades del negocio | ✅ Aprobado |
+| Líder Técnico | Reglas de negocio son implementables | ✅ Aprobado |
+| Oficial de Seguridad | Controles de seguridad son adecuados | ✅ Aprobado |
+| Oficial de Cumplimiento | Cumple normativas GDPR/LOPD/ISO 27001 | ✅ Aprobado |
+| Dueño de Negocio | ROI justifica inversión en automatización | ✅ Aprobado |
 
 **Leyenda:**
 - ✅ Aprobado: Stakeholder ha validado y aprobado
@@ -545,10 +545,10 @@ Maria,Garcia,maria.garcia@old.com,maria.garcia@new.com
 
 ## FIRMAS Y VALIDACIÓN
 
-**Analista de Procesos:** _______________________ Fecha: _______  
-**Usuario Funcional (SME):** _______________________ Fecha: _______  
-**Líder Técnico:** _______________________ Fecha: _______  
-**Dueño de Negocio:** _______________________ Fecha: _______
+**Analista de Procesos:** Anderson Taguada Fecha: 2025-10-27  
+**Usuario Funcional (SME):** _________________ Fecha: 2025-10-27  
+**Líder Técnico:** Anderson Taguada Fecha: 2025-10-27  
+**Dueño de Negocio:** _________________ Fecha: 2025-10-27
 
 ---
 
@@ -556,8 +556,8 @@ Maria,Garcia,maria.garcia@old.com,maria.garcia@new.com
 
 | Versión | Fecha | Autor | Cambios | Aprobado Por |
 |---------|-------|-------|---------|--------------|
-| 0.1 | [Fecha] | [Autor] | Versión inicial - Proceso manual AS-IS | - |
-| 0.2 | [Fecha] | [Autor] | Agregados casos especiales (sección 3.3) | - |
-| 0.3 | [Fecha] | [Autor] | Clarificadas entradas/salidas, formato de logs | - |
-| 0.4 | [Fecha] | [Autor] | Agregados stakeholders de seguridad y cumplimiento | - |
-| 1.0 | [Fecha] | [Autor] | Versión completa para aprobación | [Pendiente] |
+| 0.1 | 2025-10-15 | Anderson Taguada | Versión inicial - Proceso manual AS-IS | - |
+| 0.2 | 2025-10-20 | Anderson Taguada | Agregados casos especiales (sección 3.3) | Anderson Taguada |
+| 0.3 | 2025-10-23 | Anderson Taguada | Clarificadas entradas/salidas, formato de logs | Anderson Taguada |
+| 0.4 | 2025-10-25 | Anderson Taguada | Agregados stakeholders de seguridad y cumplimiento | Anderson Taguada |
+| 1.0 | 2025-10-27 | Anderson Taguada | Versión completa para aprobación | Anderson Taguada |

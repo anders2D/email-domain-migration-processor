@@ -1,1 +1,0 @@
-[2025-10-27 17:48:37] ERROR: user@old.com\nadmin@old.com - BR-001 - Múltiples símbolos @ detectados

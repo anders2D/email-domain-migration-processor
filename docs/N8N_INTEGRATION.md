@@ -14,6 +14,8 @@ Datos de Entrada → Extraer → Transformar → Generar → Salida CSV
 
 Cada paso corresponde a un endpoint de la API que sigue el patrón de arquitectura hexagonal.
 
+![Flujo de n8n](n8n_flow.png)
+
 ## 📋 Requisitos Previos
 
 - Instancia de n8n (cloud o auto-hospedada)

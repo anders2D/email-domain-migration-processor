@@ -52,8 +52,20 @@ Thumbs.db
 expected_output.csv
 output.json
 *.zip
+*.csv
+*.json
+!examples/n8n_workflow.json
+!examples/file_examples/*.txt
+error_log.txt
+summary.txt
 
 # Secrets
 .env
 secrets.json
 credentials.json
+.pypirc
+
+# PyPI
+build/
+dist/
+*.egg-info/

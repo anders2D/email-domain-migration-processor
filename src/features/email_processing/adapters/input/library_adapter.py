@@ -4,7 +4,7 @@ Library Usage Adapter - Modular & Stateless
 from typing import Union, List
 from src.features.email_processing.domain.email_service import EmailProcessingService
 from src.features.email_processing.adapters.output.file_adapter import FileEmailRepository
-from src.features.email_processing.adapters.output.csv_adapter import CsvEmailWriter
+
 from src.shared.validation_adapter import RegexEmailValidator
 from src.shared.logging_adapter import PythonLogger
 
@@ -86,25 +86,58 @@ class EmailProcessingLibrary:
         Returns:
             Count of processed emails or list of emails (for inline)
         """
-        emails = [item['transformed'] for item in transformed if item.get('valid')]
-        
         if output_type == 'csv':
             if not output_file:
                 raise ValueError("output_file required for csv")
-            CsvEmailWriter().write(emails, output_file)
-            return len(emails)
+            # Convert to Email objects
+            from src.features.email_processing.domain.email import Email
+            email_objects = []
+            for item in transformed:
+                if item.get('valid'):
+                    parts = item['transformed'].split('@')
+                    if len(parts) == 2:
+                        name_parts = parts[0].split('.')
+                        if len(name_parts) == 2:
+                            email_obj = Email.create(
+                                nombre=name_parts[0],
+                                apellido=name_parts[1],
+                                correo_original=item['original'],
+                                nuevo_dominio=parts[1]
+                            )
+                            email_objects.append(email_obj)
+            from src.features.email_processing.adapters.output.csv_adapter import CsvEmailWriter
+            CsvEmailWriter().save_emails(email_objects, output_file)
+            return len(email_objects)
         
         elif output_type == 'json':
             if not output_file:
                 raise ValueError("output_file required for json")
+            # Convert to Email objects
+            from src.features.email_processing.domain.email import Email
             from src.features.email_processing.adapters.output.json_adapter import JsonEmailWriter
-            JsonEmailWriter().write(emails, output_file)
-            return len(emails)
+            email_objects = []
+            for item in transformed:
+                if item.get('valid'):
+                    parts = item['transformed'].split('@')
+                    if len(parts) == 2:
+                        name_parts = parts[0].split('.')
+                        if len(name_parts) == 2:
+                            email_obj = Email.create(
+                                nombre=name_parts[0],
+                                apellido=name_parts[1],
+                                correo_original=item['original'],
+                                nuevo_dominio=parts[1]
+                            )
+                            email_objects.append(email_obj)
+            JsonEmailWriter().save_emails(email_objects, output_file)
+            return len(email_objects)
         
         elif output_type == 'inline':
+            emails = [item['transformed'] for item in transformed if item.get('valid')]
             return emails
         
         elif output_type == 'silent':
+            emails = [item['transformed'] for item in transformed if item.get('valid')]
             return len(emails)
         
         else:

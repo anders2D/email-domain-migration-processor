@@ -755,9 +755,9 @@ python main_cli.py --input-type file --input emails.txt --new-domain company.com
 python main_api.py
 
 # Ver en tiempo real:
-# 2024-10-27 10:30:15 - INFO - Extracting emails from list
-# 2024-10-27 10:30:15 - INFO - Extracted 2 emails
-# 2024-10-27 10:30:16 - INFO - Transforming 2 emails to domain company.com
+# 2025-10-27 10:30:15 - INFO - Extracting emails from list
+# 2025-10-27 10:30:15 - INFO - Extracted 2 emails
+# 2025-10-27 10:30:16 - INFO - Transforming 2 emails to domain company.com
 ```
 
 ### Métricas
@@ -770,8 +770,8 @@ aws cloudwatch get-metric-statistics \
   --namespace AWS/Lambda \
   --metric-name Invocations \
   --dimensions Name=FunctionName,Value=email-processor \
-  --start-time 2024-10-27T00:00:00Z \
-  --end-time 2024-10-27T23:59:59Z \
+  --start-time 2025-10-27T00:00:00Z \
+  --end-time 2025-10-27T23:59:59Z \
   --period 3600 \
   --statistics Sum
 
@@ -780,8 +780,8 @@ aws cloudwatch get-metric-statistics \
   --namespace AWS/Lambda \
   --metric-name Errors \
   --dimensions Name=FunctionName,Value=email-processor \
-  --start-time 2024-10-27T00:00:00Z \
-  --end-time 2024-10-27T23:59:59Z \
+  --start-time 2025-10-27T00:00:00Z \
+  --end-time 2025-10-27T23:59:59Z \
   --period 3600 \
   --statistics Sum
 ```
@@ -794,8 +794,8 @@ aws cloudwatch get-metric-statistics \
   --namespace AWS/ApiGateway \
   --metric-name Count \
   --dimensions Name=ApiId,Value=<api-id> \
-  --start-time 2024-10-27T00:00:00Z \
-  --end-time 2024-10-27T23:59:59Z \
+  --start-time 2025-10-27T00:00:00Z \
+  --end-time 2025-10-27T23:59:59Z \
   --period 3600 \
   --statistics Sum
 ```
@@ -975,7 +975,7 @@ Para problemas no resueltos:
 
 ## 📝 Notas de Versión
 
-### v1.0.0 (2024-10-27)
+### v1.0.0 (2025-10-27)
 
 **Características:**
 - ✅ CLI, API Local, Lambda y Librería Python
@@ -994,7 +994,7 @@ Para problemas no resueltos:
 
 ---
 
-**Última actualización:** 2024-10-27  
+**Última actualización:** 2025-10-27  
 **Versión:** 1.0.0  
 **Licencia:** MIT  
 **Mantenedor:** Equipo de Desarrollo

@@ -1,0 +1,47 @@
+from setuptools import setup, find_packages
+
+with open("README.md", "r", encoding="utf-8") as fh:
+    long_description = fh.read()
+
+setup(
+    name="email-processor-cli",
+    version="2025.10.27.192353",
+    author="Anderson Taguada",
+    author_email="your.email@example.com",
+    description="CLI tool for email processing with domain migration",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/yourusername/hiperautomatization",
+    packages=find_packages(),
+    license="MIT",
+    classifiers=[
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Developers",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Operating System :: OS Independent",
+    ],
+    python_requires=">=3.8",
+    install_requires=[
+        "flask>=3.0.0",
+        "requests>=2.31.0",
+    ],
+    py_modules=['main_cli'],
+    entry_points={
+        "console_scripts": [
+            "email-processor=main_cli:main",
+        ],
+    },
+    include_package_data=True,
+    keywords="email processing cli domain migration automation",
+    project_urls={
+        "Bug Reports": "https://github.com/yourusername/hiperautomatization/issues",
+        "Source": "https://github.com/yourusername/hiperautomatization",
+        "Documentation": "https://github.com/yourusername/hiperautomatization/blob/main/README.md",
+    },
+)

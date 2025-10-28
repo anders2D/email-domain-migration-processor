@@ -43,8 +43,8 @@ def example_generate():
     print("=== GENERATE EXAMPLES ===\n")
     
     transformed = [
-        {"original": "user@old.com", "transformed": "user@new.com", "valid": True},
-        {"original": "admin@old.com", "transformed": "admin@new.com", "valid": True}
+        {"original": "user.test@old.com", "transformed": "user.test@new.com", "valid": True},
+        {"original": "admin.root@old.com", "transformed": "admin.root@new.com", "valid": True}
     ]
     
     # CSV output

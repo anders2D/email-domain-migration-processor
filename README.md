@@ -1,5 +1,39 @@
 # Procesador de Correos - Arquitectura Hexagonal
 
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![PyPI version](https://badge.fury.io/py/email-processor-cli.svg)](https://pypi.org/project/email-processor-cli/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![AWS Lambda](https://img.shields.io/badge/AWS-Lambda-orange.svg)](https://aws.amazon.com/lambda/)
+[![Terraform](https://img.shields.io/badge/IaC-Terraform-purple.svg)](https://www.terraform.io/)
+
+> Sistema de migración de dominios de correo electrónico con arquitectura hexagonal, multi-interfaz (CLI, API, Librería) y despliegue en AWS Lambda.
+
+## 📑 Tabla de Contenidos
+
+- [Características](#-características)
+- [Arquitectura](#-principios-de-arquitectura)
+- [Lógica de Negocio](#-lógica-de-negocio)
+- [Instalación](#-instalación)
+- [Inicio Rápido](#-inicio-rápido)
+- [Documentación](#-documentación)
+- [Seguridad](#-seguridad)
+- [Despliegue](#-despliegue)
+- [Contribución](#-contribución)
+- [Licencia](#-licencia)
+
+## ✨ Características
+
+- ✅ **Arquitectura Hexagonal** - Núcleo de negocio aislado de infraestructura
+- ✅ **Multi-interfaz** - CLI, API REST (local + Lambda), Librería Python
+- ✅ **Sin Estado** - Stateless, escalable horizontalmente
+- ✅ **Validación Robusta** - 5 reglas de negocio (BR-001 a BR-005)
+- ✅ **Transformación Inteligente** - 5 reglas de transformación (TR-001 a TR-005)
+- ✅ **E/S Flexible** - Múltiples formatos de entrada/salida (CSV, JSON, inline)
+- ✅ **Seguridad** - Autenticación con API Key en Lambda
+- ✅ **IaC** - Infraestructura como código con Terraform
+- ✅ **Logging** - CloudWatch logs con retención configurable
+- ✅ **Documentación Completa** - PDD, diagramas Mermaid, guías de uso
+
 ## 🎯 Principios de Arquitectura
 
 - ✅ **Sin Estado**: Sin estado entre peticiones
@@ -84,12 +118,70 @@ src/features/email_processing/
 └── shared/             # Validación y Logging
 ```
 
+## 📦 Instalación
+
+### Requisitos Previos
+
+- Python 3.8 o superior
+- pip (gestor de paquetes de Python)
+- AWS CLI (solo para despliegue en Lambda)
+- Terraform 1.0+ (solo para despliegue en Lambda)
+
+### Opción 1: Desde PyPI (Recomendado)
+
+```bash
+pip install email-processor-cli
+```
+
+### Opción 2: Desde Código Fuente
+
+```bash
+# Clonar repositorio
+git clone https://github.com/anders2d/hiperautomatization.git
+cd hiperautomatization
+
+# Instalar dependencias
+pip install -r requirements.txt
+
+# Verificar instalación
+python main_cli.py --help
+```
+
 ## 🚀 Inicio Rápido
 
 ### CLI
+
+**Instalado desde PyPI:**
+```bash
+email-processor --input-type list --input "user@old.com" --new-domain new.com --output-type inline
+```
+
+**Desde código fuente:**
 ```bash
 python main_cli.py --input-type list --input "user@old.com" --new-domain new.com --output-type inline
 ```
+
+### 🎬 Demos en Acción
+
+<details>
+<summary><b>Demo Básico - Procesamiento Inline</b></summary>
+<br>
+<img src="demos/demo_basic.svg" alt="Demo Básico">
+</details>
+
+<details>
+<summary><b>Validación de Errores - Reglas de Negocio</b></summary>
+<br>
+<img src="demos/demo_validation.svg" alt="Demo Validación">
+</details>
+
+<details>
+<summary><b>Salida CSV - Formato Estructurado</b></summary>
+<br>
+<img src="demos/demo_csv.svg" alt="Demo CSV">
+</details>
+
+**Ver más demos:** [demos/README.md](demos/README.md)
 
 ### API (Local)
 ```bash
@@ -169,36 +261,91 @@ curl -X POST $API_URL/transform -H "x-api-key: YOUR_KEY" -d '{}'
 
 ## 📚 Ejemplos
 
-Ver carpeta [examples/](examples/) para ejemplos completos de uso:
-- Ejemplos de API (local + Lambda con API Key)
-- Ejemplos de librería
-- Ejemplos de CLI (Windows + Linux/Mac)
+Ver carpeta [examples/](examples/) para ejemplos completos:
+
+- **[API Local](examples/api_local_example.py)** - Uso de API Flask local
+- **[API Lambda](examples/api_lambda_example.sh)** - Llamadas a API en AWS con autenticación
+- **[Librería Python](examples/library_example.py)** - Integración como librería
+- **[CLI Windows](examples/cli_example.bat)** - Scripts batch para Windows
+- **[CLI Linux/Mac](examples/cli_example.sh)** - Scripts shell para Unix
+- **[n8n Workflow](examples/n8n_workflow.json)** - Flujo de automatización n8n
+
+## 📦 Publicación en PyPI
+
+### 🎉 Paquete Publicado
+
+Este proyecto está disponible en PyPI:
+
+- **Nombre:** `email-processor-cli`
+- **Última versión:** `2025.10.27.183827`
+- **URL:** https://pypi.org/project/email-processor-cli/
+
+### 🚀 Publicar Nueva Versión
+
+**Publicación automática con timestamp:**
+
+```bash
+# Windows
+scripts\publish_timestamp.bat
+
+# Linux/Mac
+chmod +x scripts/publish_timestamp.sh
+./scripts/publish_timestamp.sh
+```
+
+El script:
+- Genera versión automática: `YYYY.MM.DD.HHMMSS`
+- Actualiza archivos de configuración
+- Construye el paquete
+- Publica en PyPI o TestPyPI
+
+**Formato de versión:**
+- `2025.01.27.143052` - 27 enero 2025, 14:30:52
+- `2025.02.15.091523` - 15 febrero 2025, 09:15:23
+
+### 📚 Guías de Publicación
+
+- **[docs/PYPI_DEPLOYMENT.md](docs/PYPI_DEPLOYMENT.md)** - Documentación completa
+- **[PYPI_COMMANDS.md](PYPI_COMMANDS.md)** - Referencia rápida de comandos
 
 ## 🧪 Pruebas
 
 ```bash
+# Pruebas de API local
 python test_api.py
+
+# Pruebas de CLI
+python main_cli.py --input-type list --input "test@example.com" --new-domain new.com --output-type inline
+
+# Pruebas de librería
+python examples/library_example.py
 ```
 
 ## 📖 Documentación
 
-### 🚀 Primeros Pasos
+### 🚀 Guías de Usuario
 
-- **[Guía de Inicio Rápido](docs/QUICK_START.md)** - Comienza a usar en 5 minutos con ejemplos prácticos
-- **[Guía de Despliegue](docs/DEPLOYMENT_GUIDE.md)** - Documentación completa de despliegue y uso
-- **[Hoja de Referencia](docs/CHEATSHEET.md)** - Referencia rápida de comandos y configuraciones
-- **[Integración n8n](docs/N8N_INTEGRATION.md)** - Automatización de flujos con plataforma n8n
+| Documento | Descripción | Audiencia |
+|-----------|-------------|----------|
+| **[Inicio Rápido](docs/QUICK_START.md)** | Comienza en 5 minutos | Todos |
+| **[Guía de Despliegue](docs/DEPLOYMENT_GUIDE.md)** | Despliegue completo en AWS | DevOps |
+| **[Hoja de Referencia](docs/CHEATSHEET.md)** | Comandos y configuraciones | Desarrolladores |
+| **[Integración n8n](docs/N8N_INTEGRATION.md)** | Automatización con n8n | Automatización |
+| **[Publicación PyPI](docs/PYPI_DEPLOYMENT.md)** | Publicar paquete en PyPI | Mantenedores |
+| **[Comandos PyPI](PYPI_COMMANDS.md)** | Referencia rápida de comandos | Desarrolladores |
 
-### 📋 Documentación de Procesos
+### 📋 Documentación de Procesos (PDD)
 
-**[docs/pdd/PDD.md](docs/pdd/PDD.md)** - Documentación completa del proceso de negocio:
+**[Process Definition Document](docs/pdd/PDD.md)** - Documentación completa del proceso de negocio:
 
-- 📄 **Proceso AS-IS:** Descripción del proceso manual con actores, pasos y métricas
-- 📊 **Reglas de Negocio:** Validación (BR-001 a BR-005) y reglas de transformación (TR-001 a TR-005)
-- 🤖 **Análisis de Automatización:** Viabilidad de automatización 100% con mapeo de tecnologías
-- 🚀 **Visión TO-BE:** Diseño del proceso automatizado y comparación de beneficios
-- ⚠️ **Evaluación de Riesgos:** Riesgos operacionales, de seguridad y cumplimiento con estrategias de mitigación
-- 📅 **Hoja de Ruta de Transición:** Plan de implementación de 6 meses
+| Sección | Contenido | Propósito |
+|---------|-----------|----------|
+| **Proceso AS-IS** | Proceso manual actual | Entender estado actual |
+| **Reglas de Negocio** | BR-001 a BR-005, TR-001 a TR-005 | Validación y transformación |
+| **Análisis de Automatización** | Viabilidad y mapeo tecnológico | Justificar automatización |
+| **Visión TO-BE** | Proceso automatizado | Diseñar solución |
+| **Evaluación de Riesgos** | Riesgos y mitigación | Gestión de riesgos |
+| **Roadmap** | Plan de 6 meses | Implementación gradual |
 
 ### 📊 Diagramas de Procesos
 
@@ -215,26 +362,60 @@ python test_api.py
 | `proceso-tobe.mmd` | Proceso automatizado TO-BE | 5.1 |
 | `roadmap-transicion.mmd` | Gantt de transición de 6 meses | 5.3 |
 
-**Generar Diagramas:**
-```bash
-cd docs/pdd/diagrams
-sh convert.sh
-```
-
-**Requisitos:**
-```bash
-npm install -g @mermaid-js/mermaid-cli
-```
-
 ## 🚢 Despliegue
 
-Ver [terraform/README.md](terraform/README.md) para instrucciones de despliegue en AWS.
+### Despliegue Local
 
-### Logs de CloudWatch
+```bash
+# API Local
+python main_api.py
+# Servidor en http://localhost:5000
 
-Los logs se guardan automáticamente en CloudWatch:
+# CLI
+python main_cli.py --input-type file --input sample_emails.txt --new-domain new.com
+```
 
-- **Logs de Lambda:** `/aws/lambda/email-processor`
-- **Logs de API Gateway:** `/aws/apigateway/email-processor`
-- **Retención:** 7 días
-- **Incluye:** Request/response, errores, fallos de validación, validación de API key
+### Despliegue en AWS Lambda
+
+Ver **[terraform/README.md](terraform/README.md)** para instrucciones completas.
+
+```bash
+cd terraform
+
+# Windows
+build.bat
+
+# Linux/Mac
+./build.sh
+
+# Desplegar infraestructura
+terraform init
+terraform plan
+terraform apply
+
+# Obtener API Key
+terraform output api_key
+```
+
+### Monitoreo y Logs
+
+**CloudWatch Logs:**
+
+| Recurso | Log Group | Retención |
+|---------|-----------|----------|
+| Lambda Function | `/aws/lambda/email-processor` | 7 días |
+| API Gateway | `/aws/apigateway/email-processor` | 7 días |
+
+**Métricas incluidas:**
+- Request/response completos
+- Errores y excepciones
+- Fallos de validación (BR-001 a BR-005)
+- Validación de API key
+- Tiempos de ejecución
+
+## 👤 Autor
+
+**Anderson Taguada**
+
+- GitHub: [@anders2d](https://github.com/anders2d)
+- Email: ferchoafta@gmail.com

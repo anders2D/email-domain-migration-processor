@@ -211,8 +211,8 @@ aws cloudwatch get-metric-statistics \
   --namespace AWS/Lambda \
   --metric-name Invocations \
   --dimensions Name=FunctionName,Value=email-processor \
-  --start-time 2024-01-01T00:00:00Z \
-  --end-time 2024-12-31T23:59:59Z \
+  --start-time 2025-01-01T00:00:00Z \
+  --end-time 2025-12-31T23:59:59Z \
   --period 3600 \
   --statistics Sum
 

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <style>
+    .terminal { font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 12px; }
+    .bg { fill: #1e1e1e; }
+    .text { fill: #d4d4d4; }
+    .prompt { fill: #4ec9b0; }
+    .command { fill: #dcdcaa; }
+    .output { fill: #ce9178; }
+    .success { fill: #4ec9b0; }
+  </style>
+  
+  <rect class="bg" width="800" height="400"/>
+  
+  <text class="terminal prompt" x="20" y="30">$</text>
+  <text class="terminal command" x="35" y="30">email-processor --input-type list --input "john.doe@old.com,jane.smith@old.com" --new-domain new.com --output-type inline</text>
+  
+  <text class="terminal output" x="20" y="60">john.doe@new.com</text>
+  <text class="terminal output" x="20" y="80">jane.smith@new.com</text>
+  
+  <text class="terminal success" x="20" y="110">[OK] Processed 2/2 emails</text>
+  <text class="terminal text" x="20" y="130">[OK] Error log: error_log.txt</text>
+  <text class="terminal text" x="20" y="150">[OK] Summary: summary.txt</text>
+</svg>
