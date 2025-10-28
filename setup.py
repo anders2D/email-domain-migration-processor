@@ -31,10 +31,9 @@ setup(
         "flask>=3.0.0",
         "requests>=2.31.0",
     ],
-    py_modules=['main_cli'],
     entry_points={
         "console_scripts": [
-            "email-processor=main_cli:main",
+            "email-processor=src.features.email_processing.adapters.input.cli_entrypoint:main",
         ],
     },
     include_package_data=True,

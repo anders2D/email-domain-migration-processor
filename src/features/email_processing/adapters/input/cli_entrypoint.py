@@ -1,17 +1,11 @@
-"""
-CLI Interface - Hexagonal Architecture
-"""
+"""CLI Entry Point for email-processor command"""
 import sys
-import os
 import argparse
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
-
 from src.features.email_processing.adapters.input.cli_adapter import EmailProcessingCLI
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Email Processor - Modular & Stateless')
+    parser = argparse.ArgumentParser(description='Email Processor - Hexagonal Architecture')
     parser.add_argument('--input-type', choices=['file', 'list', 'text'], default='file', help='Input type')
     parser.add_argument('--input', required=True, help='Input data')
     parser.add_argument('--new-domain', required=True, help='New domain for emails')
